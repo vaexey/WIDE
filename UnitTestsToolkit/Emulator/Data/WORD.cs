@@ -1,0 +1,161 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using WIDEToolkit.Emulator.Data;
+
+namespace UnitTestsToolkit.Emulator.Data
+{
+    [TestClass]
+    public class WORDTest
+    {
+        [TestMethod]
+        public void Initialization()
+        {
+            var src1 = Encoding.ASCII.GetBytes("test123");
+            
+            var src2 = new byte[] { 0x01, 0x33, 0x55 };
+            var src3 = new byte[] { 0x01, 0x33, 0x15 };
+
+            var w1 = (WORD)src1;
+            var w2 = WORD.FromBytes(src2, 22);
+
+            var dest1 = w1.ToBytes();
+            var dest2 = w2.ToBytes();
+
+            Assert.IsTrue(dest1.SequenceEqual(src1));
+            Assert.IsTrue(dest2.SequenceEqual(src3));
+        }
+
+        [TestMethod]
+        public void Slice()
+        {
+            {
+                var src = new byte[] { 0xca, 0xfe };
+                var dest = new byte[] { 0xca };
+
+                var w = src.ToWord().Slice(0, 8);
+
+                Assert.IsTrue(w.ToBytes().SequenceEqual(dest));
+            }
+            {
+                //                 0x153301
+                //            v           v 0   
+                // 00010101 00110011 00000001
+                //             10011 000000
+                //                   0x04C0
+                var src = new byte[] { 0x01, 0x33, 0x15 };
+                var dest = new byte[] { 0xC0, 0x04 };
+
+                var w = src.ToWord().Slice(2, 13);
+
+                Assert.IsTrue(w.ToBytes().SequenceEqual(dest));
+            }
+            {
+                var src = new byte[] { 0xde, 0xad };
+                var dest = new byte[] { 0xbb, 0x05 };
+
+                var w = src.ToWord().Slice(3, 15);
+
+                Assert.IsTrue(w.ToBytes().SequenceEqual(dest));
+            }
+            {
+                var src = 0xef;
+                var dest = new byte[] { 0b111 };
+
+                var w = WORD.FromUInt64((ulong)src).Slice(5, 8);
+
+                Assert.IsTrue(w.ToBytes().SequenceEqual(dest));
+            }
+        }
+
+        [TestMethod]
+        public void ToString_()
+        {
+            {
+                var src = new byte[] { 0xef, 0xbe, 0xad, 0xde };
+
+                var w = src.ToWord().ToString(16);
+
+                Assert.AreEqual("deadbeef", w);
+            }
+            {
+                var src = new byte[] { 0xef, 0xbe, 0xad, 0xde };
+
+                var w = src.ToWord().ToString(10, " ");
+
+                Assert.AreEqual("222 173 190 239", w);
+            }
+        }
+
+        [TestMethod]
+        public void Write()
+        {
+            {
+                var src1 = new byte[] { 0x00, 0xde };
+                var src2 = new byte[] { 0xff };
+                var dest = new byte[] { 0x38, 0xde };
+
+                var w = src1.ToWord();
+
+                w.Write(src2.ToWord(3), 3);
+
+                Assert.IsTrue(w.ToBytes().SequenceEqual(dest));
+            }
+            {
+                var src1 = new byte[] { 0x00, 0x00 };
+                var src2 = new byte[] { 0xff };
+                var dest = new byte[] { 0xf8, 0x07 };
+
+                var w = src1.ToWord();
+
+                w.Write(src2.ToWord(), 3);
+
+                Assert.IsTrue(w.ToBytes().SequenceEqual(dest));
+            }
+            {
+                var src1 = new byte[] { 0xaa, 0xaa, 0xaa, 0xaa, 0xaa };
+                var src2 = new byte[] { 0x12, 0x34, 0x56};
+                var dest = new byte[] { 0x2a, 0x41, 0x63, 0xa5, 0xaa };
+
+                var w = src1.ToWord();
+
+                w.Write(src2.ToWord(), 4);
+
+                Assert.IsTrue(w.ToBytes().SequenceEqual(dest));
+            }
+        }
+
+        [TestMethod]
+        public void Extend()
+        {
+            {
+                var src1 = new byte[] { 0x2a, 0x41, 0x63, 0xa5, 0xaa };
+                var dest = new byte[] { 0x2a, 0x41, 0x63, 0xa5, 0xaa, 
+                                        0x00, 0x00, 0x00, 0x00, 0x00 };
+
+                var w = src1.ToWord();
+
+                w.ExtendBy(33);
+
+                Assert.IsTrue(w.ToBytes().SequenceEqual(dest));
+                Assert.AreEqual(73, w.Width);
+            }
+        }
+
+        [TestMethod]
+        public void Sum()
+        {
+            {
+                var w1 = WORD.FromUInt64(1241ul);
+                var w2 = WORD.FromUInt64(2333ul);
+
+                var sum = w1 + w2;
+
+                Assert.AreEqual(3574ul, sum.ToUInt64());
+                Assert.AreEqual(1241ul, w1.ToUInt64());
+            }
+        }
+    }
+}

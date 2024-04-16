@@ -1,0 +1,59 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32630.192
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WIDE", "WIDE\WIDE.csproj", "{DBEA6FD2-726D-415B-8221-66495F7D3F52}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScintillaNET", "ScintillaNET\ScintillaNET.csproj", "{22AE2386-60F1-476E-9303-61CDB0AAC4CF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WIDEToolkit", "WIDEToolkit\WIDEToolkit.csproj", "{5DF80D9F-B0AA-403F-B334-929ADDEA929E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTestsToolkit", "UnitTestsToolkit\UnitTestsToolkit.csproj", "{80C8C2B5-BCA1-4862-803A-F4B8273D0AFC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Elementy rozwiązania", "Elementy rozwiązania", "{EA4A181B-3AC2-4B5C-A8A6-8E5FC55CF47D}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		libs\Be.Windows.Forms.HexBox.dll = libs\Be.Windows.Forms.HexBox.dll
+		CREDITS.md = CREDITS.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+		Signed|Any CPU = Signed|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DBEA6FD2-726D-415B-8221-66495F7D3F52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBEA6FD2-726D-415B-8221-66495F7D3F52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBEA6FD2-726D-415B-8221-66495F7D3F52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBEA6FD2-726D-415B-8221-66495F7D3F52}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBEA6FD2-726D-415B-8221-66495F7D3F52}.Signed|Any CPU.ActiveCfg = Release|Any CPU
+		{DBEA6FD2-726D-415B-8221-66495F7D3F52}.Signed|Any CPU.Build.0 = Release|Any CPU
+		{22AE2386-60F1-476E-9303-61CDB0AAC4CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22AE2386-60F1-476E-9303-61CDB0AAC4CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22AE2386-60F1-476E-9303-61CDB0AAC4CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22AE2386-60F1-476E-9303-61CDB0AAC4CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22AE2386-60F1-476E-9303-61CDB0AAC4CF}.Signed|Any CPU.ActiveCfg = Signed|Any CPU
+		{22AE2386-60F1-476E-9303-61CDB0AAC4CF}.Signed|Any CPU.Build.0 = Signed|Any CPU
+		{5DF80D9F-B0AA-403F-B334-929ADDEA929E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DF80D9F-B0AA-403F-B334-929ADDEA929E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DF80D9F-B0AA-403F-B334-929ADDEA929E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DF80D9F-B0AA-403F-B334-929ADDEA929E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DF80D9F-B0AA-403F-B334-929ADDEA929E}.Signed|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DF80D9F-B0AA-403F-B334-929ADDEA929E}.Signed|Any CPU.Build.0 = Debug|Any CPU
+		{80C8C2B5-BCA1-4862-803A-F4B8273D0AFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80C8C2B5-BCA1-4862-803A-F4B8273D0AFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80C8C2B5-BCA1-4862-803A-F4B8273D0AFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80C8C2B5-BCA1-4862-803A-F4B8273D0AFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80C8C2B5-BCA1-4862-803A-F4B8273D0AFC}.Signed|Any CPU.ActiveCfg = Debug|Any CPU
+		{80C8C2B5-BCA1-4862-803A-F4B8273D0AFC}.Signed|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {22EBE8E4-F6C9-48D3-8F95-55AF3B8FB975}
+	EndGlobalSection
+EndGlobal

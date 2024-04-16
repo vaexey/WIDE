@@ -1,0 +1,296 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace WIDEToolkit.Emulator.Data
+{
+    public class WORD
+    {
+        private byte[] _bytes;
+        private int _width;
+
+        public int Width => _width;
+
+        private WORD(byte[] bytes, int width)
+        {
+            _bytes = bytes;
+            _width = width;
+        }
+
+        public byte[] ToBytes()
+        {
+            return _bytes;
+        }
+
+        public ulong ToUInt64()
+        {
+            return BitConverter.ToUInt64(_bytes, 0);
+        }
+
+        public WORD Slice(int start, int end)
+        {
+            var o = new byte[(int)Math.Ceiling((end - start) / 8d)];
+
+            int offset = (int)Math.Floor(start / 8d);
+            int lb = start % 8;
+            int hb = 8 - start % 8;
+
+            int i;
+            for (i = 0; i < o.Length - 1; i++)
+            {
+                o[i] = (byte)(
+                    (_bytes[offset + i] >> lb) +
+                    (_bytes[offset + i + 1] << hb) & 0xFF
+                );
+            }
+            for(;i < o.Length; i++)
+            {
+                o[i] = (byte)(
+                    (_bytes[offset + i] >> lb)
+                );
+            }
+
+            int xb = end % 8;
+
+            //o[i - 1] = (byte)(o[i - 1] & (0xFF >> xb));
+
+            return FromBytes(o, end - start);
+        }
+    
+        public byte[] SliceBytes(int start, int end)
+        {
+            return Slice(start, end).ToBytes();
+        }
+
+        public static WORD FromBytes(byte[] bytes, int width = 0)
+        {
+            if (width == 0)
+                width = bytes.Length * 8;
+
+            var ceil = width;
+            if (width % 8 != 0)
+                ceil += 8 - width % 8;
+
+            if (ceil / 8 != bytes.Length)
+            {
+                Array.Resize(ref bytes, ceil / 8);
+            }
+
+            if (width % 8 != 0)
+            {
+                bytes[bytes.Length - 1] =
+                    (byte)(bytes[bytes.Length - 1] & ~(0xFF << width % 8));
+            }
+
+            return new WORD(bytes, width);
+        }
+
+        public static WORD FromUInt64(ulong value, int width = 0)
+        {
+            return FromBytes(BitConverter.GetBytes(value), width);
+        }
+
+        public static WORD Zero(int width)
+        {
+            var ceil = width;
+            if (width % 8 != 0)
+                ceil += 8 - width % 8;
+
+            return FromBytes(new byte[ceil / 8], width);
+        }
+
+        public void Write(WORD w, int start)
+        {
+            int idx1 = start / 8;
+            int idx2 = idx1 + w._width / 8 - 1;
+
+            if ((start + w._width) % 8 != 0)
+                idx2++;
+            else if ((start + w._width) == 8)
+                idx2++;
+
+            int lb = start % 8;
+            int hb = 8 - start % 8;
+
+            int mask = 0xFF << lb;
+            int mod8 = 0x1 << 10;
+
+            if (idx1 == idx2)
+            {
+                mask &= (0xFF >> (hb - w._width));
+
+                _bytes[idx1] = (byte)(
+                    (_bytes[idx1] & ~mask) |
+                    ((w._bytes[idx1] << lb) & mask)
+                );
+            }
+            else
+            {
+                _bytes[idx1] = (byte)(
+                    (_bytes[idx1] & ~mask) |
+                    ((w._bytes[idx1] << lb) & mask)
+                );
+
+                for (int i = idx1 + 1; i < idx2; i++)
+                {
+
+                    _bytes[i] = (byte)(
+                        (w._bytes[i - 1] >> lb) +
+                        (w._bytes[i] << hb) & 0xFF
+                    );
+                }
+
+                mask = (0xFF >> (hb - w._width + mod8) % 8);
+
+                byte lastb = w._bytes[idx2 - 1];
+
+                _bytes[idx2] = (byte)(
+                    ((_bytes[idx2] << hb) & ~mask) |
+                    ((lastb >> lb) & mask)
+                );
+            }
+        }
+
+        public void Write(WORD w, int start, int ss, int se = 0)
+        {
+            if (se == 0)
+                se = w._width;
+
+            Write(w.Slice(ss, se), start);
+        }
+
+        public void ExtendBy(int by)
+        {
+            var width = _width + by;
+
+            ExtendTo(width);
+        }
+
+        public void ExtendTo(int width)
+        {
+            var ceil = width;
+            if (width % 8 != 0)
+                ceil += 8 - width % 8;
+
+            if (ceil / 8 != _bytes.Length)
+            {
+                Array.Resize(ref _bytes, ceil / 8);
+            }
+
+            _width = width;
+        }
+
+        public void Add(WORD value)
+        {
+            int min = Math.Min(_bytes.Length, value._bytes.Length);
+
+            int carry = 0;
+            for (int i = 0; i < min; i++)
+            {
+                int sum = _bytes[i] + value._bytes[i] + carry;
+                carry = sum >> 8;
+
+                _bytes[i] = (byte)sum;
+            }
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj == null)
+                return false;
+
+            if(obj is WORD w)
+            {
+                if(_width != w._width)
+                    return false;
+
+                for (int i = 0; i < _bytes.Length; i++)
+                    if (_bytes[i] != w._bytes[i])
+                        return false;
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public override string ToString()
+        {
+            return ToString(16);
+        }
+
+        public string ToString(int radix, string delim = "")
+        {
+            int width = 0;
+
+            if(radix == 16)
+            {
+                width = 2;
+            } else if(radix == 2)
+            {
+                width = 8;
+            }
+
+            return string.Join(delim, _bytes.Reverse().Select(
+                    b => Convert.ToString(b, radix).PadLeft(width, '0')
+                ).ToArray());
+        }
+
+        public WORD Clone()
+        {
+            return new WORD((byte[])_bytes.Clone(), _width);
+        }
+
+        public static explicit operator WORD(byte[] bytes)
+        {
+            return FromBytes(bytes);
+        }
+
+        public static bool operator ==(WORD? w1, WORD? w2)
+        {
+            if (w1 is null)
+                return w2 is null;
+
+            return w1.Equals(w2);
+        }
+
+        public static bool operator !=(WORD? w1, WORD? w2)
+        {
+            return !(w1 == w2);
+        }
+        
+        public static WORD operator +(WORD w1, WORD w2)
+        {
+            var w = w1.Clone();
+
+            w.Add(w2);
+
+            return w;
+        }
+
+        public WORD this[int start, int end]
+        {
+            get => Slice(start, end);
+            // TODO: unify implementation
+            //set => Write(value, start, 0, end - start);
+        }
+
+        public WORD this[int index]
+        {
+            get => Slice(0, index);
+            set => Write(value, index);
+        }
+    }
+
+    public static class WORDExtensions
+    {
+        public static WORD ToWord(this byte[] arr, int width = 0)
+        {
+            return WORD.FromBytes(arr, width);
+        }
+    }
+
+
+}
