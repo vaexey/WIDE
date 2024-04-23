@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using WIDEToolkit.Emulator;
 using WIDEToolkit.Emulator.Assembly;
 using WIDEToolkit.Emulator.Data;
+using WIDEToolkit.Emulator.Flow;
 
 namespace WIDEToolkit.Examples.W
 {
@@ -15,9 +16,22 @@ namespace WIDEToolkit.Examples.W
         {
             Instructions = new RawInstruction[]
             {
-                //new(
-                //    WORD.FromUInt64(0ul, opcodeWidth),
-                //    "")
+                new(
+                    WORD.FromUInt64(0ul, opcodeWidth),
+                    "DOD",
+                    new Signal[][][]
+                    {
+                        new Signal[][]
+                        {
+                            new Signal[]
+                            {
+                                arch.GetSignal("weja"),
+                                arch.GetSignal("dod"),
+                                arch.GetSignal("weak")
+                            }
+                        }
+                    }
+                )
             };
         }
     }

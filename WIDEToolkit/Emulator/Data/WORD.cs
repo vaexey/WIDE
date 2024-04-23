@@ -6,11 +6,17 @@ using System.Threading.Tasks;
 
 namespace WIDEToolkit.Emulator.Data
 {
+    /// <summary>
+    /// A wrapper for byte[] that allows direct bit manipulation
+    /// </summary>
     public class WORD
     {
         private byte[] _bytes;
         private int _width;
-
+        
+        /// <summary>
+        /// Bitwise word width
+        /// </summary>
         public int Width => _width;
 
         private WORD(byte[] bytes, int width)
@@ -26,7 +32,16 @@ namespace WIDEToolkit.Emulator.Data
 
         public ulong ToUInt64()
         {
-            return BitConverter.ToUInt64(_bytes, 0);
+            //return BitConverter.ToUInt64(_bytes, 0);
+            int idx = _bytes.Length - 1;
+            ulong val = _bytes[idx--];
+
+            while(--idx > -1)
+            {
+                val = (val << 8) | _bytes[idx];
+            }
+
+            return val;
         }
 
         public WORD Slice(int start, int end)
@@ -104,53 +119,55 @@ namespace WIDEToolkit.Emulator.Data
         public void Write(WORD w, int start)
         {
             int idx1 = start / 8;
-            int idx2 = idx1 + w._width / 8 - 1;
+            int idx2 = (start + w._width - 1) / 8;
 
-            if ((start + w._width) % 8 != 0)
-                idx2++;
-            else if ((start + w._width) == 8)
-                idx2++;
+            int woff = start % 8;
+            int wmask = ~(0xff << woff) & 0xff;
 
-            int lb = start % 8;
-            int hb = 8 - start % 8;
-
-            int mask = 0xFF << lb;
-            int mod8 = 0x1 << 10;
+            _bytes[idx1] = (byte)(
+                (_bytes[idx1] & wmask) |
+                (w._bytes[0] << woff)
+             );
 
             if (idx1 == idx2)
             {
-                mask &= (0xFF >> (hb - w._width));
-
-                _bytes[idx1] = (byte)(
-                    (_bytes[idx1] & ~mask) |
-                    ((w._bytes[idx1] << lb) & mask)
-                );
+                return;
             }
-            else
+
+            for (int i = idx1 + 1; i < idx2; i++)
             {
-                _bytes[idx1] = (byte)(
-                    (_bytes[idx1] & ~mask) |
-                    ((w._bytes[idx1] << lb) & mask)
-                );
+                int j = i - idx1;
+                int bit = j * 8 - woff - 1;
+                int widx = bit / 8;
 
-                for (int i = idx1 + 1; i < idx2; i++)
-                {
-
-                    _bytes[i] = (byte)(
-                        (w._bytes[i - 1] >> lb) +
-                        (w._bytes[i] << hb) & 0xFF
-                    );
-                }
-
-                mask = (0xFF >> (hb - w._width + mod8) % 8);
-
-                byte lastb = w._bytes[idx2 - 1];
-
-                _bytes[idx2] = (byte)(
-                    ((_bytes[idx2] << hb) & ~mask) |
-                    ((lastb >> lb) & mask)
+                _bytes[i] = (byte)(
+                    (w._bytes[widx] >> (8-woff)) |
+                    (w._bytes[widx + 1] << woff)
                 );
             }
+
+            int eoff = (start + w._width) % 8;
+            if (eoff == 0) eoff = 8;
+
+            int emask = ~(0xff << eoff) & 0xff;
+
+            int eidx = (8 * (idx2 - idx1) - woff) / 8;
+
+            if (eidx + 1 == w._bytes.Length)
+            {
+                _bytes[idx2] = (byte)(
+                    (w._bytes[eidx] >> ((8 - woff) % 8)) |
+                    (_bytes[idx2] & ~emask)
+                );
+
+                return;
+            }
+
+            _bytes[idx2] = (byte)(
+                (w._bytes[eidx] >> (8-woff)) |
+                ((w._bytes[eidx + 1] << woff) & emask) |
+                (_bytes[idx2] & ~emask)
+            );
         }
 
         public void Write(WORD w, int start, int ss, int se = 0)

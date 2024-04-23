@@ -4,18 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WIDEToolkit.Emulator.Blocks;
+using WIDEToolkit.Emulator.Flow;
 
-namespace WIDEToolkit.Emulator.Flow
+namespace WIDEToolkit.Emulator.Blocks.Register
 {
     public class RegisterSignal : Signal
     {
-        public enum RegisterSignalMode
-        {
-            NOOP = 0,
-            LOAD = 1,
-            STORE = 2,
-            SUM = 3,
-        }
 
         public string Endpoint { get; }
         public int DivisionIndex { get; }

@@ -10,24 +10,27 @@ namespace WIDEToolkit.Emulator.Flow
 {
     public class Endpoint
     {
+
         public string Name { get; set; }
+        public EndpointType Type { get; set; }
         public ArchBlock Owner { get; set; }
 
-        public Endpoint(string name, ArchBlock block)
+        public Endpoint(string name, EndpointType type, ArchBlock block)
         {
             Name = name;
+            Type = type;
             Owner = block;
         }
 
-        public WORD ReadEndpoint(Architecture arch, int width)
+        public WORD ReadEndpoint(int width)
         {
-            return Owner.GetLive().ReadEndpoint(arch, this, width);
+            return Owner.GetLive().ReadEndpoint(this, width);
         }
 
 
-        public void WriteEndpoint(Architecture arch, WORD value)
+        public void WriteEndpoint(WORD value)
         {
-            Owner.GetLive().WriteEndpoint(arch, this, value);
+            Owner.GetLive().WriteEndpoint(this, value);
         }
     }
 }

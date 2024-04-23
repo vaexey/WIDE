@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using WIDEToolkit.Emulator.Data;
 using WIDEToolkit.Emulator.Flow;
 
-namespace WIDEToolkit.Emulator.Blocks.Live
+namespace WIDEToolkit.Emulator.Blocks.Register
 {
     public class LiveRegister : LiveBlock
     {
@@ -18,25 +18,31 @@ namespace WIDEToolkit.Emulator.Blocks.Live
             public int End { get; }
             public int Width { get => End - Start; }
 
-            public LiveRegisterDivision(string name, int start, int end)
+            public Endpoint Endpoint { get; }
+
+            public LiveRegisterDivision(string name, int start, int end, Endpoint endpoint)
             {
                 Name = name;
                 Start = start;
                 End = end;
+                Endpoint = endpoint;
             }
         }
 
         public Register Parent { get; }
 
         public WORD Data { get; }
+        public WORD PendingData { get; }
+
         public int Width { get; }
         public LiveRegisterDivision[] Divisions { get; }
-        
+
         public LiveRegister(Register parent, int width, IEnumerable<Signal> signals, IEnumerable<Endpoint> endps, IEnumerable<LiveRegisterDivision> divs)
         {
             Parent = parent;
             Width = width;
             Data = WORD.Zero(width);
+            PendingData = WORD.Zero(width);
 
             Signals = signals.ToArray();
             Endpoints = endps.ToArray();
@@ -61,39 +67,46 @@ namespace WIDEToolkit.Emulator.Blocks.Live
             var ep = arch.GetEndpoint(rs.Endpoint);
             var div = Divisions[rs.DivisionIndex];
 
-            if(rs.Mode == RegisterSignal.RegisterSignalMode.LOAD)
+            if ((rs.Mode & RegisterSignalMode.LOAD) != 0)
             {
-                var rd = ep.Owner.GetLive().ReadEndpoint(arch, ep, div.Width);
+                var rd = ep.Owner.GetLive().ReadEndpoint(ep, div.Width);
 
                 //Data[div.Start, div.Width] = rd;
-                Data.Write(rd, div.Start, 0, div.Width);
+
+                PendingData.Write(rd, div.Start, 0, div.Width);
+
+                if(div.Endpoint.Type == EndpointType.BUS)
+                    Data.Write(rd, div.Start, 0, div.Width);
 
                 return;
             }
-            
-            if(rs.Mode == RegisterSignal.RegisterSignalMode.STORE)
+
+            if ((rs.Mode & RegisterSignalMode.STORE) != 0)
             {
                 var rd = Data.Slice(div.Start, div.End);
 
-                ep.Owner.GetLive().WriteEndpoint(arch, ep, rd);
+                ep.Owner.GetLive().WriteEndpoint(ep, rd);
 
                 return;
             }
 
-            if(rs.Mode == RegisterSignal.RegisterSignalMode.SUM)
+            if ((rs.Mode & RegisterSignalMode.SUM) != 0)
             {
                 var a = Data.Slice(div.Start, div.End);
-                var b = ep.Owner.GetLive().ReadEndpoint(arch, ep, div.Width);
+                var b = ep.Owner.GetLive().ReadEndpoint(ep, div.Width);
 
                 a.Add(b);
 
-                Data.Write(a, div.Start, 0, div.Width);
+                PendingData.Write(a, div.Start, 0, div.Width);
+
+                if (div.Endpoint.Type == EndpointType.BUS)
+                    Data.Write(a, div.Start, 0, div.Width);
 
                 return;
             }
         }
 
-        public override WORD ReadEndpoint(Architecture arch, Endpoint ep, int width)
+        public override WORD ReadEndpoint(Endpoint ep, int width)
         {
             var div = Divisions.Where(x => x.Name == ep.Name).First();
 
@@ -107,16 +120,39 @@ namespace WIDEToolkit.Emulator.Blocks.Live
             return rd;
         }
 
-        public override void WriteEndpoint(Architecture arch, Endpoint ep, WORD value)
+        public override void WriteEndpoint(Endpoint ep, WORD value)
         {
             var div = Divisions.Where(x => x.Name == ep.Name).First();
 
             if (div == null)
                 throw new FlowException($"Unknown memory endpoint {ep.Name} in register {Parent.BaseName}");
 
-            Data[div.Start] = value[0, div.Width];
+            var dat = value[0, div.Width];
 
-            SetDirty();
+            if (ep.Type == EndpointType.BUS)
+            {
+                Data[div.Start] = dat;
+                PendingData[div.Start] = dat;
+
+                return;
+            }
+
+            if(ep.Type == EndpointType.REGISTER)
+            {
+                //PendingData[div.Start] = dat;
+                PendingData.Write(dat, div.Start);
+
+                return;
+            }
+
+            throw new FlowException($"Endpoint {ep.Name} has incorrect type {ep.Type}");
+        }
+
+        public override void Commit()
+        {
+            base.Commit();
+
+            Data.Write(PendingData, 0);
         }
     }
 }

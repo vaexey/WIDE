@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WIDEToolkit.Emulator.Data;
 
-namespace UnitTestsToolkit.Emulator.Data
+namespace ToolkitUnitTests.Emulator.Data
 {
     [TestClass]
     public class WORDTest
@@ -90,41 +90,105 @@ namespace UnitTestsToolkit.Emulator.Data
         }
 
         [TestMethod]
-        public void Write()
+        public void Write1()
         {
-            {
-                var src1 = new byte[] { 0x00, 0xde };
-                var src2 = new byte[] { 0xff };
-                var dest = new byte[] { 0x38, 0xde };
+            var src1 = new byte[] { 0x00, 0xde };
+            var src2 = new byte[] { 0xff };
+            var dest = new byte[] { 0x38, 0xde };
 
-                var w = src1.ToWord();
+            var w = src1.ToWord();
 
-                w.Write(src2.ToWord(3), 3);
+            w.Write(src2.ToWord(3), 3);
 
-                Assert.IsTrue(w.ToBytes().SequenceEqual(dest));
-            }
-            {
-                var src1 = new byte[] { 0x00, 0x00 };
-                var src2 = new byte[] { 0xff };
-                var dest = new byte[] { 0xf8, 0x07 };
+            Assert.IsTrue(w.ToBytes().SequenceEqual(dest));
+        }
 
-                var w = src1.ToWord();
+        [TestMethod]
+        public void Write2()
+        {
+            var src1 = new byte[] { 0x00, 0x00 };
+            var src2 = new byte[] { 0xff };
+            var dest = new byte[] { 0xf8, 0x07 };
 
-                w.Write(src2.ToWord(), 3);
+            var w = src1.ToWord();
 
-                Assert.IsTrue(w.ToBytes().SequenceEqual(dest));
-            }
-            {
-                var src1 = new byte[] { 0xaa, 0xaa, 0xaa, 0xaa, 0xaa };
-                var src2 = new byte[] { 0x12, 0x34, 0x56};
-                var dest = new byte[] { 0x2a, 0x41, 0x63, 0xa5, 0xaa };
+            w.Write(src2.ToWord(), 3);
 
-                var w = src1.ToWord();
+            Assert.IsTrue(w.ToBytes().SequenceEqual(dest));
+        }
 
-                w.Write(src2.ToWord(), 4);
+        [TestMethod]
+        public void Write3()
+        {
+            var src1 = new byte[] { 0xaa, 0xaa, 0xaa, 0xaa, 0xaa };
+            var src2 = new byte[] { 0x12, 0x34, 0x56};
+            var dest = new byte[] { 0x2a, 0x41, 0x63, 0xa5, 0xaa };
 
-                Assert.IsTrue(w.ToBytes().SequenceEqual(dest));
-            }
+            var w = src1.ToWord();
+
+            w.Write(src2.ToWord(), 4);
+
+            Assert.IsTrue(w.ToBytes().SequenceEqual(dest));
+        }
+
+        [TestMethod]
+        public void Write4()
+        {
+            var src1 = WORD.FromUInt64(0xFFFFFFFFFFFFFFFFul, 64);
+            var src2 = WORD.FromUInt64(0xFFFFFFFF00000000ul, 64);
+            var dest = WORD.FromUInt64(0xFFFFFFFF00000000ul, 64);
+
+            src1.Write(src2, 0);
+
+            Assert.IsTrue(src1 == dest);
+        }
+
+        [TestMethod]
+        public void Write5()
+        {
+            var src1 = WORD.FromUInt64(0xdeadbeefcafebabeul, 64);
+            var src2 = WORD.FromUInt64(0xc0deb00ful, 31);
+            var dest = WORD.FromUInt64(0xDEADBEE81BD601FEul, 64);
+
+            src1.Write(src2, 5);
+
+            Assert.IsTrue(src1 == dest);
+        }
+
+        [TestMethod]
+        public void Write6()
+        {
+            var src1 = WORD.FromUInt64(0x2B1B0BF83531C75Ful, 64);
+            var src2 = WORD.FromUInt64(0x2C68BEED71735C4ul, 60);
+            var dest = WORD.FromUInt64(0xB1A2FBB5C5CD713ul, 64);
+
+            src1.Write(src2, 2);
+
+            Assert.IsTrue(src1 == dest);
+        }
+
+        [TestMethod]
+        public void Write7()
+        {
+            var src1 = WORD.FromUInt64(0x0000000000000000ul, 64);
+            var src2 = WORD.FromUInt64(0xFFFFFFFFFFFFFFFFul, 64);
+            var dest = WORD.FromUInt64(0xFFFFFFFFFFFFFFFFul, 64);
+
+            src1.Write(src2, 0);
+
+            Assert.IsTrue(src1 == dest);
+        }
+
+        [TestMethod]
+        public void Write8()
+        {
+            var src1 = WORD.FromUInt64(0xFFFFFFFFFFFFFFFFul, 64);
+            var src2 = WORD.FromUInt64(0x0000000000000000ul, 32);
+            var dest = WORD.FromUInt64(0xFFFFFFFF00000000ul, 64);
+
+            src1.Write(src2, 0);
+
+            Assert.IsTrue(src1 == dest);
         }
 
         [TestMethod]

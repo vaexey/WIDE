@@ -10,7 +10,7 @@ namespace WIDEToolkit.Emulator.Blocks.Live
 {
     public class LiveConstProviderBlock : LiveBlock
     {
-        public override WORD ReadEndpoint(Architecture arch, Endpoint ep, int width)
+        public override WORD ReadEndpoint(Endpoint ep, int width)
         {
             if (!ep.Name.StartsWith("__const_"))
                 throw new FlowException($"Non-const endpoint {ep.Name} was read from const provider");
@@ -29,7 +29,7 @@ namespace WIDEToolkit.Emulator.Blocks.Live
             }
         }
 
-        public override void WriteEndpoint(Architecture arch, Endpoint ep, WORD value)
+        public override void WriteEndpoint(Endpoint ep, WORD value)
         {
             throw new FlowException($"Value was written to const provider at {ep.Name}");
         }

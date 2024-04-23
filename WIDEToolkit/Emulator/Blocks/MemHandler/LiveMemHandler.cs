@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WIDEToolkit.Emulator.Blocks.Live
+namespace WIDEToolkit.Emulator.Blocks.MemHandler
 {
-    public class LiveBus : LiveBlock
+    public class LiveMemHandler : LiveBlock
     {
-        // TODO: remove
     }
 }

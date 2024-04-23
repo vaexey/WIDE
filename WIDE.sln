@@ -9,13 +9,19 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScintillaNET", "ScintillaNE
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WIDEToolkit", "WIDEToolkit\WIDEToolkit.csproj", "{5DF80D9F-B0AA-403F-B334-929ADDEA929E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTestsToolkit", "UnitTestsToolkit\UnitTestsToolkit.csproj", "{80C8C2B5-BCA1-4862-803A-F4B8273D0AFC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolkitUnitTests", "UnitTestsToolkit\ToolkitUnitTests.csproj", "{80C8C2B5-BCA1-4862-803A-F4B8273D0AFC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Elementy rozwiązania", "Elementy rozwiązania", "{EA4A181B-3AC2-4B5C-A8A6-8E5FC55CF47D}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		libs\Be.Windows.Forms.HexBox.dll = libs\Be.Windows.Forms.HexBox.dll
 		CREDITS.md = CREDITS.md
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{87A410D2-7A6C-4DFF-BF7B-5E426B4A2F93}"
+	ProjectSection(SolutionItems) = preProject
+		Flow.md = Flow.md
 	EndProjectSection
 EndProject
 Global

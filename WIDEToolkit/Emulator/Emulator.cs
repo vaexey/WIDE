@@ -15,6 +15,7 @@ namespace WIDEToolkit.Emulator
 
         public RawInstruction? CurrentInstruction { get; set; } = null;
         public int CycleIndex { get; set; } = 0;
+        public int ForkValue { get; set; } = 0;
 
         public Emulator(Architecture arch, RawInstructionSet set)
         {
@@ -39,7 +40,8 @@ namespace WIDEToolkit.Emulator
 
         protected void Fetch()
         {
-            var ir = Arch.InstructionRegister.GetLive().Data;
+            // TODO: instr reg size
+            var ir = Arch.GetEndpoint(Arch.InstructionEndpoint).ReadEndpoint(64);
 
             var instr = Set.ParseInstruction(ir);
 
@@ -52,9 +54,11 @@ namespace WIDEToolkit.Emulator
 
         protected void DoSignals()
         {
+            ForkValue = CurrentInstruction.Forks.GetForkValue(Arch);
+
             var sigs = CurrentInstruction.Cycles[CycleIndex];
 
-            Arch.ExecSignals(sigs);
+            //Arch.ExecSignals(sigs);
 
             CycleIndex++;
         }

@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using WIDEToolkit.Emulator.Blocks;
-using WIDEToolkit.Emulator.Blocks.Live;
+using WIDEToolkit.Emulator.Blocks.Register;
 using WIDEToolkit.Emulator.Data;
 using WIDEToolkit.Emulator.Flow;
 
@@ -27,13 +27,7 @@ namespace WIDEToolkit.Emulator
         protected List<Endpoint> endpoints = new();
         public ReadOnlyCollection<Endpoint> Endpoints => endpoints.AsReadOnly();
 
-        public InstructionRegister InstructionRegister
-        {
-            get => Blocks
-                .Where(x => x.GetType().IsAssignableTo(typeof(InstructionRegister)))
-                .Select(x => (InstructionRegister)x)
-                .First();
-        }
+        public string InstructionEndpoint = "";
 
         public int AddressWidth { get; } = 8;
         protected ConstProviderBlock constProvider = new();
@@ -78,7 +72,7 @@ namespace WIDEToolkit.Emulator
         public Endpoint GetEndpoint(string name)
         {
             if (name.StartsWith("__const_"))
-                return new Endpoint(name, constProvider);
+                return new Endpoint(name, EndpointType.DISJOINTED_RO, constProvider);
 
             var ep = endpoints.Find(x => x.Name == name);
 
@@ -110,38 +104,20 @@ namespace WIDEToolkit.Emulator
             ExecSingleSignal(GetSignal(name));
         }
 
-        public void CleanDirty()
+        public void ExecSignals(Signal[] signals)
         {
-            foreach (var b in Blocks)
-                if (b.GetLive() is LiveBlock lb)
-                    lb.SetNotDirty();
-        }
-        
-        public bool IsAnyDirty()
-        {
-            return Blocks.Where(b => b.GetLive() != null).Where(b => b.GetLive().Dirty).Any();
-        }
-
-        public void ExecSignals(IEnumerable<Signal> sgs)
-        {
-            // TODO: Make signal order not matter
-            int iterations = 0;
-
-            do
+            foreach(var s in signals)
             {
-                CleanDirty();
-
-                foreach (var s in sgs)
-                    ExecSingleSignal(s);
-
-                //if (!IsAnyDirty())
-                    return;
-
-                iterations++;
+                ExecSingleSignal(s);
             }
-            while (iterations < 50);
+        }
 
-            throw new FlowException("Exceeded maximum amount of signal execution: probably two signals are poining to each other");
+        public void Commit()
+        {
+            foreach(var e in Blocks)
+            {
+                e.GetLive().Commit();
+            }
         }
     }
 }

@@ -5,12 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WIDEToolkit.Emulator;
-using WIDEToolkit.Emulator.Blocks.Live;
+using WIDEToolkit.Emulator.Blocks.Register;
 using WIDEToolkit.Emulator.Data;
 using WIDEToolkit.Emulator.Flow;
-using static WIDEToolkit.Emulator.Blocks.Live.LiveRegister;
+using static WIDEToolkit.Emulator.Blocks.Register.LiveRegister;
 
-namespace UnitTestsToolkit.Emulator.Blocks.Live
+namespace ToolkitUnitTests.Emulator.Blocks
 {
     [TestClass]
     public class LiveRegisterTest
@@ -24,8 +24,8 @@ namespace UnitTestsToolkit.Emulator.Blocks.Live
                     Array.Empty<Endpoint>(),
                     new LiveRegisterDivision[]
                     {
-                        new("a", 0, 5),
-                        new("b", 5, 8)
+                        new("a", 0, 5, new Endpoint(null, EndpointType.BUS, null)),
+                        new("b", 5, 8, new Endpoint(null, EndpointType.BUS, null))
                     }
                 );
         }
@@ -37,11 +37,11 @@ namespace UnitTestsToolkit.Emulator.Blocks.Live
 
             var src = WORD.FromUInt64(0xdeadbeef);
 
-            x.WriteEndpoint(null, new Endpoint("a", null), src);
-            x.WriteEndpoint(null, new Endpoint("b", null), src);
+            x.WriteEndpoint(new Endpoint("a", EndpointType.BUS, null), src);
+            x.WriteEndpoint(new Endpoint("b", EndpointType.BUS, null), src);
 
-            var a = x.ReadEndpoint(null, new Endpoint("a", null), 64);
-            var b = x.ReadEndpoint(null, new Endpoint("b", null), 32);
+            var a = x.ReadEndpoint(new Endpoint("a", EndpointType.BUS, null), 64);
+            var b = x.ReadEndpoint(new Endpoint("b", EndpointType.BUS, null), 32);
 
             Assert.AreEqual(64, a.Width);
             Assert.AreEqual(32, b.Width);
@@ -57,7 +57,7 @@ namespace UnitTestsToolkit.Emulator.Blocks.Live
             var a = new Architecture();
             a.CreateLive();
 
-            x.WriteEndpoint(null, new Endpoint("a", null), WORD.FromUInt64(2));
+            x.WriteEndpoint(new Endpoint("a", EndpointType.BUS, null), WORD.FromUInt64(2));
 
             x.ExecuteSignal(
                 a,
@@ -66,7 +66,7 @@ namespace UnitTestsToolkit.Emulator.Blocks.Live
                     "__const_10",
                     null,
                     0,
-                    RegisterSignal.RegisterSignalMode.SUM
+                    RegisterSignalMode.SUM
                 )
             );
 

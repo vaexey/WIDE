@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WIDEToolkit.Emulator;
-using WIDEToolkit.Emulator.Blocks;
-using static WIDEToolkit.Emulator.Blocks.ALUBlock;
-using static WIDEToolkit.Emulator.Blocks.Register;
+using WIDEToolkit.Emulator.Blocks.ALU;
+using WIDEToolkit.Emulator.Blocks.Register;
+using WIDEToolkit.Emulator.Flow;
+using static WIDEToolkit.Emulator.Blocks.Register.Register;
 
 namespace WIDE.Examples.W
 {
@@ -14,18 +15,19 @@ namespace WIDE.Examples.W
     {
         public WArchitecture()
         {
-            AddBlock(new BusRegister()
+            AddBlock(new Register()
             {
                 BaseName = "magS",
                 AdjustRegisterToAddressSize = true,
-                Divisions = new RegDivision[]
+                Divisions = new()
                 {
-                    new RegDivision()
+                    new RegisterDivisionBlueprint()
                     {
                         NameRegex = new("^(.*)$"),
                         NameFormat = "{0}",
                         Start = 0,
-                        End = 8
+                        End = 8,
+                        EndpointType = EndpointType.BUS,
                     }
                 },
                 Meta = new()
@@ -35,67 +37,71 @@ namespace WIDE.Examples.W
                 }
             });
 
-            AddBlock(new BusRegister()
+            AddBlock(new Register()
             {
                 BaseName = "magA",
                 AdjustRegisterToAddressSize = true,
-                Divisions = new RegDivision[]
+                Divisions = new()
                 {
-                    new RegDivision()
+                    new RegisterDivisionBlueprint()
                     {
                         NameRegex = new("^(.*)$"),
                         NameFormat = "{0}",
                         Start = 0,
-                        End = 8
+                        End = 8,
+                        EndpointType = EndpointType.BUS,
                     }
                 }
             });
 
-            AddBlock(new InstructionRegister()
+            // TODO INSTR REGISTER
+            AddBlock(new Register()
             {
                 BaseName = "I",
                 AdjustRegisterToAddressSize = true,
-                Divisions = new RegDivision[]
+                Divisions = new()
                 {
-                    new RegDivision()
+                    new RegisterDivisionBlueprint()
                     {
                         NameFormat = "I",
                         Start = 0,
                         End = 8,
-                        SignalIn = new("magS", "wei")
-                    },
-                    new RegDivision()
+                        EndpointType = EndpointType.REGISTER,
+                    }.WithSignal("wei", "magS", RegisterSignalMode.LOAD),
+                    new RegisterDivisionBlueprint()
                     {
                         NameFormat = "IAD",
                         Start = 3,
                         End = 8,
-                        SignalOut = new("magA", "wyad")
-                    },
-                    new RegDivision()
+                        EndpointType = EndpointType.DISJOINTED_RO,
+                    }.WithSignal("wyad", "magA", RegisterSignalMode.STORE),
+                    new RegisterDivisionBlueprint()
                     {
                         NameFormat = "IKOD",
                         Start = 0,
-                        End = 3
+                        End = 3,
+                        EndpointType = EndpointType.DISJOINTED_RO,
                     }
                 }
             });
 
+            // TODO INCREMENT
             AddBlock(new Register()
             {
                 BaseName = "L",
                 AdjustRegisterToAddressSize = true,
-                Divisions = new RegDivision[]
+                Divisions = new()
                 {
-                    new RegDivision()
+                    new RegisterDivisionBlueprint()
                     {
                         NameRegex = new("^(.*)$"),
                         NameFormat = "{0}",
                         Start = 0,
                         End = 8,
-                        SignalIn = new("magA", "wel"),
-                        SignalOut = new("magA", "wyl"),
-                        SignalAdd = new("__const_1", "il"),
-                    }
+                        //SignalAdd = new("__const_1", "il"),
+                        EndpointType = EndpointType.REGISTER,
+                    }.WithSignal("wel", "magA", RegisterSignalMode.LOAD)
+                    .WithSignal("wyl", "magA", RegisterSignalMode.STORE)
                 }
             });
 
@@ -103,44 +109,92 @@ namespace WIDE.Examples.W
             {
                 BaseName = "Ak",
                 AdjustRegisterToAddressSize = true,
-                Divisions = new RegDivision[]
+                Divisions = new()
                 {
-                    new RegDivision()
+                    new RegisterDivisionBlueprint()
                     {
                         NameRegex = new("^(.*)$"),
                         NameFormat = "{0}",
                         Start = 0,
                         End = 8,
-                        SignalOut = new("magS", "wyak"),
+                        EndpointType = EndpointType.REGISTER,
+                    }.WithSignal("wyak", "magS", RegisterSignalMode.STORE)
+                }
+            });
+
+            AddBlock(new Register()
+            {
+                BaseName = "JAL_WE",
+                AdjustRegisterToAddressSize = true,
+                Divisions = new()
+                {
+                    new RegisterDivisionBlueprint()
+                    {
+                        NameRegex = new("^(.*)$"),
+                        NameFormat = "{0}",
+                        Start = 0,
+                        End = 8,
+                        EndpointType = EndpointType.BUS,
+                    }.WithSignal("weja", "magS", RegisterSignalMode.LOAD)
+                }
+            });
+
+            AddBlock(new Register()
+            {
+                BaseName = "JAL_WY",
+                AdjustRegisterToAddressSize = true,
+                Divisions = new()
+                {
+                    new RegisterDivisionBlueprint()
+                    {
+                        NameRegex = new("^(.*)$"),
+                        NameFormat = "{0}",
+                        Start = 0,
+                        End = 8,
+                        EndpointType = EndpointType.BUS,
+                    }.WithSignal("weak", "Ak", RegisterSignalMode.STORE)
+                }
+            });
+
+            AddBlock(new ALU()
+            {
+                BaseName = "JAL",
+                Signals = new()
+                {
+                    new(AnonALUOperation.Sum(8))
+                    {
+                        NameFormat = "dod",
+                        SourceEndpointFormats = new() { "JAL_WE", "Ak" },
+                        DestEndpointFormats = new() { "JAL_WY" }
                     }
                 }
             });
 
-            AddBlock(new ALUBlock()
-            {
-                BaseName = "JAL",
-                Operations = new ALUOperationDesc[]
-                {
-                    new()
-                    {
-                        Operation = ALUOperation.ADD,
-                        SignalFormat = "dod",
-                        EndpointFormat1 = "Ak",
-                        EndpointFormat2 = "magS",
-                        EndpointFormat3 = "Ak",
-                        AdjustToAddressSize = true,
-                    },
-                    new()
-                    {
-                        Operation = ALUOperation.PASS,
-                        SignalFormat = "przep",
-                        EndpointFormat1 = "Ak",
-                        EndpointFormat2 = "magS",
-                        EndpointFormat3 = "Ak",
-                        AdjustToAddressSize = true,
-                    }
-                }
-            });
+            //AddBlock(new ALUBlock()
+            //{
+            //    BaseName = "JAL",
+            //    Operations = new ALUOperationDesc[]
+            //    {
+            //        new()
+            //        {
+            //            Operation = ALUOperation.ADD,
+            //            SignalFormat = "dod",
+            //            EndpointFormat1 = "Ak",
+            //            EndpointFormat2 = "magS",
+            //            EndpointFormat3 = "Ak",
+            //            AdjustToAddressSize = true,
+            //        },
+            //        new()
+            //        {
+            //            Operation = ALUOperation.PASS,
+            //            SignalFormat = "przep",
+            //            EndpointFormat1 = "Ak",
+            //            EndpointFormat2 = "magS",
+            //            EndpointFormat3 = "Ak",
+            //            AdjustToAddressSize = true,
+            //        }
+            //    }
+            //});
 
         }
     }

@@ -12,21 +12,32 @@ namespace WIDEToolkit.Emulator.Assembly
     {
         public WORD OpCode { get; }
         public string Name { get; }
-        public Signal[][] Cycles { get; }
 
-        public RawInstruction(WORD opcode, string name, Signal[][] cycles)
+        /// <summary>
+        /// Signal[t][f][i]
+        ///  t - instruction time index
+        ///  f - fork value
+        ///  i - signal in subset index
+        /// </summary>
+        public Signal[][][] Cycles { get; }
+
+        public ForkEvaluator Forks { get; }
+
+        public RawInstruction(WORD opcode, string name, Signal[][][] cycles, ForkEvaluator? forks = null)
         {
             OpCode = opcode;
             Name = name;
             Cycles = cycles;
+            Forks = forks ?? new ForkEvaluator();
         }
 
-        public RawInstruction(Architecture arch, WORD opcode, string name, string[] cycles)
-            : this(
-                  opcode, 
-                  name, 
-                  cycles.Select(x => x.Split(" ").Select(s => arch.GetSignal(s)).ToArray()).ToArray()
-              )
-        { }
+        public static RawInstruction FromStrings(Architecture arch, WORD opcode, string name, string[] cycles)
+        {
+            return new RawInstruction(
+                  opcode,
+                  name,
+                  new Signal[][][] { cycles.Select(x => x.Split(" ").Select(s => arch.GetSignal(s)).ToArray()).ToArray() }
+              );
+        }
     }
 }
