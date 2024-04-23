@@ -90,20 +90,20 @@ namespace WIDEToolkit.Emulator.Blocks.Register
                 return;
             }
 
-            if ((rs.Mode & RegisterSignalMode.SUM) != 0)
-            {
-                var a = Data.Slice(div.Start, div.End);
-                var b = ep.Owner.GetLive().ReadEndpoint(ep, div.Width);
+            //if ((rs.Mode & RegisterSignalMode.SUM) != 0)
+            //{
+            //    var a = Data.Slice(div.Start, div.End);
+            //    var b = ep.Owner.GetLive().ReadEndpoint(ep, div.Width);
 
-                a.Add(b);
+            //    a.Add(b);
 
-                PendingData.Write(a, div.Start, 0, div.Width);
+            //    PendingData.Write(a, div.Start, 0, div.Width);
 
-                if (div.Endpoint.Type == EndpointType.BUS)
-                    Data.Write(a, div.Start, 0, div.Width);
+            //    if (div.Endpoint.Type == EndpointType.BUS)
+            //        Data.Write(a, div.Start, 0, div.Width);
 
-                return;
-            }
+            //    return;
+            //}
         }
 
         public override WORD ReadEndpoint(Endpoint ep, int width)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -10,22 +11,23 @@ namespace WIDEToolkit.Emulator.Blocks.Register
 {
     public class Register : ArchBlock<LiveRegister>
     {
-        public int Width { get; set; } = 8;
-        public List<RegisterDivisionBlueprint> Divisions { get; set; } = new();
-            //new RegisterDivisionBlueprint[] { new() {
-            //    //SignalIn = new(
-            //    //    "BUS",
-            //    //    "i_{0}"
-            //    //),
-            //    //SignalOut = new(
-            //    //    "BUS",
-            //    //    "o_{0}"
-            //    //),
-            //    Start = 0,
-            //    End = 8,
-            //} };
-
+        [Browsable(true)]
+        [DisplayName("Base name")]
+        [Description("Register base name. Used in custom formats to create signals and internal emulator endpoints.")]
+        [Category("General")]
         public string BaseName { get; set; } = "R";
+
+        [Browsable(true)]
+        [DisplayName("Width")]
+        [Description("Register width specified in bits.")]
+        [Category("Data")]
+        public int Width { get; set; } = 8;
+
+        [Browsable(true)]
+        [DisplayName("Divisions")]
+        [Description("Register division set.")]
+        [Category("Data")]
+        public List<RegisterDivisionBlueprint> Divisions { get; set; } = new();
 
         public bool AdjustRegisterToAddressSize { get; set; } = false;
 

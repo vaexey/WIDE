@@ -50,6 +50,8 @@ namespace WIDEToolkit.Emulator.Data
             memory.Write(
                 value.Slice(0, WordSize), bitwise
             );
+
+            SetChangedFlag();
         }
     }
 }

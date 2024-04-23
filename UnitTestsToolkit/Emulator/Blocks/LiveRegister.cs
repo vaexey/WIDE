@@ -50,27 +50,27 @@ namespace ToolkitUnitTests.Emulator.Blocks
             Assert.AreEqual(0b111, b.ToBytes()[0]);
         }
 
-        [TestMethod]
-        public void Increment()
-        {
-            var x = Create();
-            var a = new Architecture();
-            a.CreateLive();
+        //[TestMethod]
+        //public void Increment()
+        //{
+        //    var x = Create();
+        //    var a = new Architecture();
+        //    a.CreateLive();
 
-            x.WriteEndpoint(new Endpoint("a", EndpointType.BUS, null), WORD.FromUInt64(2));
+        //    x.WriteEndpoint(new Endpoint("a", EndpointType.BUS, null), WORD.FromUInt64(2));
 
-            x.ExecuteSignal(
-                a,
-                new RegisterSignal(
-                    "inc",
-                    "__const_10",
-                    null,
-                    0,
-                    RegisterSignalMode.SUM
-                )
-            );
+        //    x.ExecuteSignal(
+        //        a,
+        //        new RegisterSignal(
+        //            "inc",
+        //            "__const_10",
+        //            null,
+        //            0,
+        //            RegisterSignalMode.SUM
+        //        )
+        //    );
 
-            Assert.AreEqual(12, x.Data.ToBytes()[0]);
-        }
+        //    Assert.AreEqual(12, x.Data.ToBytes()[0]);
+        //}
     }
 }

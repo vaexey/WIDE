@@ -24,6 +24,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{87A410D2-7
 		Flow.md = Flow.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WIDECLI", "WIDECLI\WIDECLI.csproj", "{A706C596-9DF9-4DA4-9725-85E4BA518DC3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,12 @@ Global
 		{80C8C2B5-BCA1-4862-803A-F4B8273D0AFC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{80C8C2B5-BCA1-4862-803A-F4B8273D0AFC}.Signed|Any CPU.ActiveCfg = Debug|Any CPU
 		{80C8C2B5-BCA1-4862-803A-F4B8273D0AFC}.Signed|Any CPU.Build.0 = Debug|Any CPU
+		{A706C596-9DF9-4DA4-9725-85E4BA518DC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A706C596-9DF9-4DA4-9725-85E4BA518DC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A706C596-9DF9-4DA4-9725-85E4BA518DC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A706C596-9DF9-4DA4-9725-85E4BA518DC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A706C596-9DF9-4DA4-9725-85E4BA518DC3}.Signed|Any CPU.ActiveCfg = Debug|Any CPU
+		{A706C596-9DF9-4DA4-9725-85E4BA518DC3}.Signed|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

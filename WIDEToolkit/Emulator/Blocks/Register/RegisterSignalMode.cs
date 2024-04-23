@@ -12,12 +12,11 @@ namespace WIDEToolkit.Emulator.Blocks.Register
         
         LOAD = 0x1,
         STORE = 0x2,
-        
-        SUM = 0x4,
+
+        //SUM = 0x4
 
         //LOAD_IMM = LOAD & IMMEDIATE,
         //STORE_IMM = STORE & IMMEDIATE,
-
 
         //IMMEDIATE = 0x8000000
     }

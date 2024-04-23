@@ -10,13 +10,13 @@ namespace WIDEToolkit.Emulator.Blocks.Register
 {
     public class RegisterDivisionBlueprint
     {
-        public string NameFormat = "{0}";
-        public List<RegisterSignalBlueprint> Signals = new();
-        public Regex NameRegex = new Regex("^.*$");
-        public int Start;
-        public int End;
+        public string NameFormat { get; set; } = "{0}";
+        public List<RegisterSignalBlueprint> Signals { get; set; } = new();
+        public Regex NameRegex { get; set; } = new Regex("^.*$");
+        public int Start { get; set; }
+        public int End { get; set; }
 
-        public EndpointType EndpointType = EndpointType.BUS;
+        public EndpointType EndpointType { get; set; } = EndpointType.BUS;
 
         public int Width { get => End - Start; }
 
@@ -25,6 +25,11 @@ namespace WIDEToolkit.Emulator.Blocks.Register
             Signals.Add(new(nameF, endpointF, mode));
 
             return this;
+        }
+
+        public override string ToString()
+        {
+            return NameFormat;
         }
     }
 }

@@ -192,6 +192,18 @@ namespace ToolkitUnitTests.Emulator.Data
         }
 
         [TestMethod]
+        public void Write9()
+        {
+            var src1 = WORD.FromUInt64(0xFFFFFFFFFFFFFFFFul, 3);
+            var src2 = WORD.FromUInt64(0x0000000000000000ul, 64);
+            var dest = WORD.FromUInt64(0x0000000000000000ul, 3);
+
+            src1.Write(src2, 0);
+
+            Assert.IsTrue(src1 == dest);
+        }
+
+        [TestMethod]
         public void Extend()
         {
             {
@@ -220,6 +232,14 @@ namespace ToolkitUnitTests.Emulator.Data
                 Assert.AreEqual(3574ul, sum.ToUInt64());
                 Assert.AreEqual(1241ul, w1.ToUInt64());
             }
+        }
+
+        [TestMethod]
+        public void Empty()
+        {
+            var w1 = WORD.Zero(0);
+
+            Assert.AreEqual(0, w1.Width);
         }
     }
 }

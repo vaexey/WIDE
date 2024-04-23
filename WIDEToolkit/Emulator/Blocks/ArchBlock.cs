@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,10 @@ namespace WIDEToolkit.Emulator.Blocks
 {
     public abstract class ArchBlock
     {
+        [Browsable(true)]
+        [DisplayName("Metadata")]
+        [Description("Associated properties that do not influence inner workings of the emulator.")]
+        [Category("General")]
         public BlockMetadata Meta { get; set; } = new();
 
         public abstract LiveBlock? GetLive();
@@ -35,6 +40,7 @@ namespace WIDEToolkit.Emulator.Blocks
                 Live = (T)live;
         }
 
+        [Browsable(false)]
         public virtual T? Live { get; set; } = null;
     }
 }

@@ -28,12 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProjectForm));
             tabControl = new TabControl();
             tabPageCPU = new TabPage();
             cpuToolbar1 = new View.Toolbars.CpuToolbar();
             cpuPanel = new Panel();
-            propertyGrid1 = new PropertyGrid();
+            cpuProperties = new PropertyGrid();
             tabPageMemory = new TabPage();
             memoryToolbar1 = new View.Toolbars.MemoryToolbar();
             memoryPanel = new Panel();
@@ -44,6 +45,7 @@
             label2 = new Label();
             label3 = new Label();
             pictureBox1 = new PictureBox();
+            mainTimer = new System.Windows.Forms.Timer(components);
             tabControl.SuspendLayout();
             tabPageCPU.SuspendLayout();
             tabPageMemory.SuspendLayout();
@@ -67,7 +69,7 @@
             // 
             tabPageCPU.Controls.Add(cpuToolbar1);
             tabPageCPU.Controls.Add(cpuPanel);
-            tabPageCPU.Controls.Add(propertyGrid1);
+            tabPageCPU.Controls.Add(cpuProperties);
             tabPageCPU.Location = new Point(4, 24);
             tabPageCPU.Margin = new Padding(0);
             tabPageCPU.Name = "tabPageCPU";
@@ -91,14 +93,15 @@
             cpuPanel.Name = "cpuPanel";
             cpuPanel.Size = new Size(706, 476);
             cpuPanel.TabIndex = 1;
+            cpuPanel.Click += cpuPanel_Click;
             // 
-            // propertyGrid1
+            // cpuProperties
             // 
-            propertyGrid1.Dock = DockStyle.Right;
-            propertyGrid1.Location = new Point(709, 0);
-            propertyGrid1.Name = "propertyGrid1";
-            propertyGrid1.Size = new Size(240, 504);
-            propertyGrid1.TabIndex = 0;
+            cpuProperties.Dock = DockStyle.Right;
+            cpuProperties.Location = new Point(709, 0);
+            cpuProperties.Name = "cpuProperties";
+            cpuProperties.Size = new Size(240, 504);
+            cpuProperties.TabIndex = 0;
             // 
             // tabPageMemory
             // 
@@ -197,6 +200,11 @@
             pictureBox1.TabIndex = 4;
             pictureBox1.TabStop = false;
             // 
+            // mainTimer
+            // 
+            mainTimer.Enabled = true;
+            mainTimer.Tick += mainTimer_Tick;
+            // 
             // ProjectForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -230,7 +238,7 @@
         private TabPage tabPageMemory;
         private TabPage tabPageAsm;
         private Panel assemblerPanel;
-        private PropertyGrid propertyGrid1;
+        private PropertyGrid cpuProperties;
         private Panel memoryPanel;
         private Label label1;
         private Panel cpuPanel;
@@ -240,5 +248,6 @@
         private View.Toolbars.AsmToolbar asmToolbar1;
         private View.Toolbars.CpuToolbar cpuToolbar1;
         private PictureBox pictureBox1;
+        private System.Windows.Forms.Timer mainTimer;
     }
 }

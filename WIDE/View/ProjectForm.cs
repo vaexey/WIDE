@@ -14,6 +14,7 @@ using WIDE.Examples.W;
 using WIDE.View;
 using WIDE.View.CPU;
 using WIDEToolkit.Emulator;
+using WIDEToolkit.Emulator.Blocks;
 using WIDEToolkit.Examples.W;
 
 namespace WIDE
@@ -25,12 +26,14 @@ namespace WIDE
 
         EmulatorContainer emu;
 
+        public ArchBlock? SelectedCpuBlock = null;
+
         public ProjectForm()
         {
             InitializeComponent();
 
             tabControl.ImageList = new ImageList();
-            
+
             tabControl.ImageList.Images.Add("cpu", Resources.Computer_16x16);
             tabPageCPU.ImageKey = "cpu";
 
@@ -51,6 +54,7 @@ namespace WIDE
             HexEditorInitializer.Init(memoryEditor);
 
             var a = new WArchitecture();
+            a.CreateLive();
             Emulator e = new(a, new WRawInstructionSet(a));
 
             emu = new(e);
@@ -61,23 +65,62 @@ namespace WIDE
             DrawArch();
         }
 
+        private void mainTimer_Tick(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cpuPanel_Click(object sender, EventArgs e)
+        {
+            SelectBlock(null);
+        }
+
+        private void cpuPanel_element_Click(object? sender, EventArgs e)
+        {
+            if (sender is CpuElementControl cec)
+            {
+                SelectBlock(cec.Block);
+            }
+        }
+
+        private void SelectBlock(ArchBlock? b)
+        {
+            if (SelectedCpuBlock == b) return;
+
+            SelectedCpuBlock = b;
+
+            if (b is null)
+            {
+                cpuProperties.SelectedObject = null;
+
+                return;
+            }
+
+            cpuProperties.SelectedObject = b;
+        }
+
         private void DrawArch()
         {
             cpuPanel.Controls.Clear();
 
-            foreach(var b in emu.Emu.Arch.Blocks)
+            foreach (var b in emu.Emu.Arch.Blocks)
             {
                 var meta = b.Meta;
 
-                var cpb = new CpuElementControl();
+                if (meta.Hidden)
+                    continue;
+
+                var cpb = new CpuElementControl(b);
 
                 cpuPanel.Controls.Add(cpb);
 
                 cpb.Text = meta.Title;
                 cpb.Left = meta.X;
                 cpb.Top = meta.Y;
+                cpb.Width = meta.Width;
+                cpb.Height = meta.Height;
 
-                cpb.Size = new(100, 100);
+                cpb.Click += cpuPanel_element_Click;
             }
         }
     }

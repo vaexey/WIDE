@@ -118,6 +118,11 @@ namespace WIDEToolkit.Emulator.Data
 
         public void Write(WORD w, int start)
         {
+            if(w.Width > Width - start)
+            {
+                w = w.Slice(0, Width - start);
+            }
+
             int idx1 = start / 8;
             int idx2 = (start + w._width - 1) / 8;
 

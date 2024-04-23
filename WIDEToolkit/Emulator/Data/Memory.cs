@@ -16,6 +16,25 @@ namespace WIDEToolkit.Emulator.Data
         public abstract WORD Read(int address);
         public abstract void Write(int address, WORD value);
 
+        public virtual bool HasChanged { get; set; } = false;
+
+        public virtual bool CheckChangedFlag()
+        {
+            if(HasChanged)
+            {
+                HasChanged = false;
+
+                return true;
+            }
+
+            return false;
+        }
+
+        protected virtual void SetChangedFlag()
+        {
+            HasChanged = true;
+        }
+
         protected virtual void CheckBounds(int address)
         {
             if ( address < 0 || address >= GetSize())

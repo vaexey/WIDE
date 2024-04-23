@@ -4,6 +4,8 @@ using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
+using WIDEToolkit.Emulator.Blocks;
+using WIDEToolkit.Emulator.Blocks.Register;
 
 namespace WIDE.View.CPU
 {
@@ -11,6 +13,8 @@ namespace WIDE.View.CPU
     {
         protected PictureBox dragButton;
         protected Point? dragPreviousLocation = null;
+
+        public ArchBlock Block;
 
         private bool _draggable = false;
         public bool Draggable {
@@ -23,8 +27,12 @@ namespace WIDE.View.CPU
             }
         }
 
-        public CpuElementControl()
+        public CpuElementControl(ArchBlock block)
         {
+            Block = block;
+
+            Font = new Font(FontFamily.GenericMonospace, Font.Size);
+
             dragButton = new()
             {
                 Width = 16,
@@ -44,6 +52,17 @@ namespace WIDE.View.CPU
 
             Controls.Add(dragButton);
         }
+    
+        protected void Synchronize()
+        {
+            var lv = Block.GetLive();
+
+            if(lv is LiveRegister reg)
+            {
+                
+            }
+        }
+
         protected override void OnResize(EventArgs e)
         {
             dragButton.Left = Width - 16 -3;
