@@ -13,7 +13,7 @@ namespace WIDEToolkit.Emulator.Data
     {
         private byte[] _bytes;
         private int _width;
-        
+
         /// <summary>
         /// Bitwise word width
         /// </summary>
@@ -36,7 +36,7 @@ namespace WIDEToolkit.Emulator.Data
             int idx = _bytes.Length - 1;
             ulong val = _bytes[idx--];
 
-            while(--idx > -1)
+            while (--idx > -1)
             {
                 val = (val << 8) | _bytes[idx];
             }
@@ -60,7 +60,7 @@ namespace WIDEToolkit.Emulator.Data
                     (_bytes[offset + i + 1] << hb) & 0xFF
                 );
             }
-            for(;i < o.Length; i++)
+            for (; i < o.Length; i++)
             {
                 o[i] = (byte)(
                     (_bytes[offset + i] >> lb)
@@ -73,7 +73,7 @@ namespace WIDEToolkit.Emulator.Data
 
             return FromBytes(o, end - start);
         }
-    
+
         public byte[] SliceBytes(int start, int end)
         {
             return Slice(start, end).ToBytes();
@@ -116,11 +116,38 @@ namespace WIDEToolkit.Emulator.Data
             return FromBytes(new byte[ceil / 8], width);
         }
 
+        public static WORD One(int width)
+        {
+            var ceil = width;
+            byte[] arr;
+
+            if (width % 8 != 0)
+            {
+                ceil += 8 - width % 8;
+
+                arr = new byte[ceil / 8];
+
+                for (int i = 0; i < arr.Length - 1; i++)
+                    arr[i] = 255;
+
+                arr[arr.Length - 1] = (byte)(255 >> (8 - width % 8));
+            }
+            else
+            {
+                arr = new byte[ceil / 8];
+
+                for(int i = 0; i < arr.Length; i++)
+                    arr[i] = 255;
+            }
+
+            return FromBytes(arr, width);
+        }
+
         public void Write(WORD w, int start)
         {
             if(w.Width > Width - start)
             {
-                w = w.Slice(0, Width - start);
+                w = w.Slice(0, Width - start + 1);
             }
 
             int idx1 = start / 8;
@@ -218,6 +245,39 @@ namespace WIDEToolkit.Emulator.Data
             }
         }
 
+        public void Subtract(WORD value)
+        {
+            if(value.Width == _width)
+            {
+                //2s compliment inversion
+                var twocpl = value.Clone();
+                twocpl.Invert();
+                twocpl.Add(FromUInt64(1ul, value._width));
+
+                Add(twocpl);
+
+                return;
+            }
+
+            // TODO
+            throw new Exception("Cannot subtract WORDs with different widths");
+        }
+
+        public void Invert()
+        {
+            for(int i = 0; i < _bytes.Length; i++)
+            {
+                _bytes[i] = (byte)~_bytes[i];
+            }
+
+            int mod = _width % 8;
+            if (mod != 0)
+            {
+                int i = _bytes.Length - 1;
+                _bytes[i] = (byte)(_bytes[i] & (0xff >> (8 - mod)));
+            }
+        }
+
         public override bool Equals(object? obj)
         {
             if (obj == null)
@@ -282,12 +342,20 @@ namespace WIDEToolkit.Emulator.Data
         {
             return !(w1 == w2);
         }
-        
+
         public static WORD operator +(WORD w1, WORD w2)
         {
             var w = w1.Clone();
 
             w.Add(w2);
+
+            return w;
+        }
+        public static WORD operator -(WORD w1, WORD w2)
+        {
+            var w = w1.Clone();
+
+            w.Subtract(w2);
 
             return w;
         }

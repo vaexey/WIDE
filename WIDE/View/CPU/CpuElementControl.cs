@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WIDEToolkit.Emulator.Blocks;
 using WIDEToolkit.Emulator.Blocks.Register;
+using static ScintillaNET.Style;
 
 namespace WIDE.View.CPU
 {
@@ -14,7 +15,11 @@ namespace WIDE.View.CPU
         protected PictureBox dragButton;
         protected Point? dragPreviousLocation = null;
 
-        public ArchBlock Block;
+        protected Label statusLabel;
+
+        public EventHandler MetaPositionChanged = delegate { };
+
+        public ArchBlock Block { get; set; }
 
         private bool _draggable = false;
         public bool Draggable {
@@ -31,8 +36,9 @@ namespace WIDE.View.CPU
         {
             Block = block;
 
-            Font = new Font(FontFamily.GenericMonospace, Font.Size);
+            Font = Styles.FontMonospace(Font.Size);
 
+            // DRAG
             dragButton = new()
             {
                 Width = 16,
@@ -51,15 +57,39 @@ namespace WIDE.View.CPU
             MouseUp += dragButton_MouseUp;
 
             Controls.Add(dragButton);
+
+            //STATUS
+            statusLabel = new()
+            {
+                Top = 15,
+                Left = 15,
+                Text = "",
+                Font = Styles.FontSans(Font.Size)
+            };
+
+            Controls.Add(statusLabel);
         }
     
-        protected void Synchronize()
+        public void UpdateText()
         {
-            var lv = Block.GetLive();
+            var status = ArchBlockPrinter.GetStatusString(Block);
+            if (statusLabel.Text != status)
+                statusLabel.Text = status;
 
-            if(lv is LiveRegister reg)
+            if(Text != Block.Meta.Title)
+                Text = Block.Meta.Title;
+        }
+
+        public void UpdatePosition()
+        {
+            var meta = Block.Meta;
+
+            if (dragPreviousLocation == null)
             {
-                
+                Left = meta.X;
+                Top = meta.Y;
+                Width = meta.Width;
+                Height = meta.Height;
             }
         }
 
@@ -95,8 +125,13 @@ namespace WIDE.View.CPU
 
         protected void dragButton_MouseUp(object? sender, MouseEventArgs e)
         {
+            Block.Meta.X = Location.X;
+            Block.Meta.Y = Location.Y;
+
             dragPreviousLocation = null;
             Cursor = Cursors.Default;
+
+            MetaPositionChanged(this, new EventArgs());
         }
 
         protected bool isInBounds(Point p)

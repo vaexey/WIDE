@@ -16,22 +16,41 @@ namespace WIDEToolkit.Examples.W
         {
             Instructions = new RawInstruction[]
             {
-                new(
-                    WORD.FromUInt64(0ul, opcodeWidth),
-                    "DOD",
-                    new Signal[][][]
-                    {
-                        new Signal[][]
-                        {
-                            new Signal[]
-                            {
-                                arch.GetSignal("weja"),
-                                arch.GetSignal("dod"),
-                                arch.GetSignal("weak")
-                            }
-                        }
-                    }
-                )
+
+                RawInstruction.FromStrings(
+                    arch, WORD.FromUInt64(0ul), "STP", new() {
+                        "czyt wys wei il",
+                        "__stop"
+                    }),
+                RawInstruction.FromStrings(
+                    arch, WORD.FromUInt64(1ul), "DOD", new() {
+                        "czyt wys wei il",
+                        "wyad wea",
+                        "czyt wys weja dod weak wyl wea",
+                    }),
+                RawInstruction.FromStrings(
+                    arch, WORD.FromUInt64(2ul), "ODE", new() {
+                        "czyt wys wei il",
+                        "wyad wea",
+                        "czyt wys weja ode weak wyl wea",
+                    }),
+                RawInstruction.FromStrings(
+                    arch, WORD.FromUInt64(3ul), "POB", new() {
+                        "czyt wys wei il",
+                        "wyad wea",
+                        "czyt wys weja przep weak wyl wea",
+                    }),
+                RawInstruction.FromStrings(
+                    arch, WORD.FromUInt64(4ul), "LAD", new() {
+                        "czyt wys wei il",
+                        "wyad wea wyak wes",
+                        "pisz wyl wea",
+                    }),
+                RawInstruction.FromStrings(
+                    arch, WORD.FromUInt64(50ul), "SOB", new() {
+                        "czyt wys wei il",
+                        "wyad wea wel"
+                    })
             };
         }
     }

@@ -22,9 +22,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{87A410D2-7A6C-4DFF-BF7B-5E426B4A2F93}"
 	ProjectSection(SolutionItems) = preProject
 		Flow.md = Flow.md
+		Instruction.md = Instruction.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WIDECLI", "WIDECLI\WIDECLI.csproj", "{A706C596-9DF9-4DA4-9725-85E4BA518DC3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WIDECLI", "WIDECLI\WIDECLI.csproj", "{A706C596-9DF9-4DA4-9725-85E4BA518DC3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YaTabControl", "YaTabControl\YaTabControl.csproj", "{5AEF1243-E6E4-4219-8BFA-45D7A279287D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +66,12 @@ Global
 		{A706C596-9DF9-4DA4-9725-85E4BA518DC3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A706C596-9DF9-4DA4-9725-85E4BA518DC3}.Signed|Any CPU.ActiveCfg = Debug|Any CPU
 		{A706C596-9DF9-4DA4-9725-85E4BA518DC3}.Signed|Any CPU.Build.0 = Debug|Any CPU
+		{5AEF1243-E6E4-4219-8BFA-45D7A279287D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5AEF1243-E6E4-4219-8BFA-45D7A279287D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5AEF1243-E6E4-4219-8BFA-45D7A279287D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5AEF1243-E6E4-4219-8BFA-45D7A279287D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5AEF1243-E6E4-4219-8BFA-45D7A279287D}.Signed|Any CPU.ActiveCfg = Debug|Any CPU
+		{5AEF1243-E6E4-4219-8BFA-45D7A279287D}.Signed|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

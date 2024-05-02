@@ -31,12 +31,12 @@ namespace WIDEToolkit.Emulator.Assembly
             Forks = forks ?? new ForkEvaluator();
         }
 
-        public static RawInstruction FromStrings(Architecture arch, WORD opcode, string name, string[] cycles)
+        public static RawInstruction FromStrings(Architecture arch, WORD opcode, string name, List<string> cycles)
         {
             return new RawInstruction(
                   opcode,
                   name,
-                  new Signal[][][] { cycles.Select(x => x.Split(" ").Select(s => arch.GetSignal(s)).ToArray()).ToArray() }
+                  cycles.Select(x => new Signal[][] { x.Split(" ").Select(s => arch.GetSignal(s)).ToArray() }).ToArray()
               );
         }
     }

@@ -4,35 +4,52 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WIDE.Examples.W;
+using WIDEToolkit.Emulator;
+using WIDEToolkit.Emulator.Assembly;
 using WIDEToolkit.Emulator.Blocks.ALU;
 using WIDEToolkit.Emulator.Blocks.MemHandler;
 using WIDEToolkit.Emulator.Blocks.Register;
 using WIDEToolkit.Emulator.Data;
+using WIDEToolkit.Examples.W;
 
 namespace WIDECLI.simpleW
 {
     internal class SimpleW
     {
+        private Emulator Emu;
+        private RawInstructionSet ris;
         private WArchitecture W = new();
         private MemHandler MH;
+
 
         public void Start()
         {
             W.CreateLive();
+            ris = new WRawInstructionSet(W);
+
+            Emu = new(W, ris);
 
             MH = (MemHandler)W.Blocks.Where(b => b.GetType() == typeof(MemHandler)).First();
 
             MH.Live.Memory = new SingleMemory(256);
 
-            MH.Live.Memory.Write(0, WORD.FromUInt64(255, 8));
+            MH.Live.Memory.Write(0, WORD.FromUInt64(36, 8));
+            MH.Live.Memory.Write(1, WORD.FromUInt64(37, 8));
+            MH.Live.Memory.Write(2, WORD.FromUInt64(38, 8));
 
-            while(true)
+            MH.Live.Memory.Write(4, WORD.FromUInt64(1, 8));
+            MH.Live.Memory.Write(5, WORD.FromUInt64(2, 8));
+            MH.Live.Memory.Write(6, WORD.FromUInt64(4, 8));
+
+            while (true)
             {
                 Draw();
 
                 var line = Console.ReadLine();
+                Console.Clear();
 
-                if(line.StartsWith(">"))
+
+                if (line.StartsWith(">"))
                 {
                     var sigs = line.Substring(1).Split(" ");
                     foreach (var sig in sigs)
@@ -58,6 +75,14 @@ namespace WIDECLI.simpleW
 
                     addr.WriteEndpoint(WORD.FromUInt64((ulong)data, 8));
                 }
+                else if(line.StartsWith("."))
+                {
+                    Emu.Cycle();
+                }
+                else
+                {
+                    Console.WriteLine(">signal $addr #ep .cycle");
+                }
 
                 W.Commit();
             }
@@ -65,7 +90,10 @@ namespace WIDECLI.simpleW
 
         private void Draw()
         {
-            Console.Clear();
+            Console.WriteLine("Cycle: {0}, Instr opcode: {1}, Instr: {2}", 
+                Emu.CycleIndex, 
+                Emu.CurrentInstruction?.OpCode.ToString() ?? "-",
+                Emu.CurrentInstruction?.Name ?? "-");
 
             for(int i = 0; i < W.Blocks.Count; i++)
             {

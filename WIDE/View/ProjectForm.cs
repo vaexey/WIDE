@@ -6,6 +6,8 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -26,9 +28,10 @@ namespace WIDE
 
         EmulatorContainer emu;
 
+        List<CpuElementControl> cpuElementControls = new();
         public ArchBlock? SelectedCpuBlock = null;
 
-        public ProjectForm()
+        public ProjectForm(EmulatorContainer econt)
         {
             InitializeComponent();
 
@@ -53,11 +56,13 @@ namespace WIDE
 
             HexEditorInitializer.Init(memoryEditor);
 
+            //emu = econt;
+
             var a = new WArchitecture();
             a.CreateLive();
             Emulator e = new(a, new WRawInstructionSet(a));
 
-            emu = new(e);
+            emu = new(a) { Emu = e };
         }
 
         private void ProjectForm_Load(object sender, EventArgs e)
@@ -67,7 +72,8 @@ namespace WIDE
 
         private void mainTimer_Tick(object sender, EventArgs e)
         {
-
+            foreach (var cpb in cpuElementControls)
+                cpb.UpdateText();
         }
 
         private void cpuPanel_Click(object sender, EventArgs e)
@@ -80,6 +86,28 @@ namespace WIDE
             if (sender is CpuElementControl cec)
             {
                 SelectBlock(cec.Block);
+            }
+        }
+
+        private void cpuPanel_meta_changed(object? sender, EventArgs e)
+        {
+            if (sender is CpuElementControl cec)
+            {
+                if (cpuProperties.SelectedObject == cec.Block)
+                    cpuProperties.Refresh();
+            }
+        }
+
+        private void cpuProperties_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
+        {
+            if (e.ChangedItem is GridItem gi
+                && gi.GetType().GetProperty("Instance") is PropertyInfo prop
+                && prop.GetValue(gi) is BlockMetadata bm)
+            {
+                foreach (var cec in cpuElementControls.Where(x => x.Block == SelectedCpuBlock))
+                {
+                    cec.UpdatePosition();
+                }
             }
         }
 
@@ -102,6 +130,7 @@ namespace WIDE
         private void DrawArch()
         {
             cpuPanel.Controls.Clear();
+            cpuElementControls.Clear();
 
             foreach (var b in emu.Emu.Arch.Blocks)
             {
@@ -112,15 +141,13 @@ namespace WIDE
 
                 var cpb = new CpuElementControl(b);
 
-                cpuPanel.Controls.Add(cpb);
+                cpb.UpdatePosition();
 
-                cpb.Text = meta.Title;
-                cpb.Left = meta.X;
-                cpb.Top = meta.Y;
-                cpb.Width = meta.Width;
-                cpb.Height = meta.Height;
+                cpuPanel.Controls.Add(cpb);
+                cpuElementControls.Add(cpb);
 
                 cpb.Click += cpuPanel_element_Click;
+                cpb.MetaPositionChanged += cpuPanel_meta_changed;
             }
         }
     }

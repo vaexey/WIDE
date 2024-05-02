@@ -8,16 +8,18 @@ namespace WIDE.View.Toolbars
 {
     internal class CpuToolbar : ToolStrip
     {
-        private ToolStripButton nextBtn;
+        //private ToolStripButton nextBtn;
 
         public CpuToolbar()
         {
-            nextBtn = new()
-            {
-                Image = Resources.Next
-            };
+            //nextBtn = new()
+            //{
+            //    Image = Resources.Next
+            //};
 
-            Items.Add(nextBtn);
+            //Items.Add(nextBtn);
+            Items.Add(ToolbarItems.ButtonArchLiveSet());
+            Items.Add(ToolbarItems.ButtonArchLiveUnset());
         }
     }
 }

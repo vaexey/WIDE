@@ -235,6 +235,65 @@ namespace ToolkitUnitTests.Emulator.Data
         }
 
         [TestMethod]
+        public void Subtraction1()
+        {
+            var w1 = WORD.FromUInt64(150ul);
+            var w2 = WORD.FromUInt64(300ul);
+
+            var exp = WORD.FromUInt64(unchecked((ulong)-150L));
+            var res = w1 - w2;
+
+            Assert.IsTrue(exp == res);
+        }
+
+        [TestMethod]
+        public void Subtraction2()
+        {
+            var w1 = WORD.FromUInt64(150ul);
+            var w2 = WORD.FromUInt64(150ul);
+
+            var exp = WORD.FromUInt64(0ul);
+            var res = w1 - w2;
+
+            Assert.IsTrue(exp == res);
+        }
+
+        [TestMethod]
+        public void Subtraction3()
+        {
+            var w1 = WORD.FromUInt64(150ul);
+            var w2 = WORD.FromUInt64(50ul);
+
+            var exp = WORD.FromUInt64(100ul);
+            var res = w1 - w2;
+
+            Assert.IsTrue(exp == res);
+        }
+
+        [TestMethod]
+        public void Subtraction4()
+        {
+            var w1 = WORD.FromUInt64(150ul);
+            var w2 = WORD.FromUInt64(unchecked((ulong)-200L));
+
+            var exp = WORD.FromUInt64(350ul);
+            var res = w1 - w2;
+
+            Assert.IsTrue(exp == res);
+        }
+
+        [TestMethod]
+        public void Invert()
+        {
+            var w1 = WORD.FromUInt64(0b0110110111011UL, 14);
+            var w2 = WORD.FromUInt64(0b11001001000100UL, 14);
+
+            w1.Invert();
+
+            Assert.IsTrue(w1 == w2);
+        }
+
+        [TestMethod]
         public void Empty()
         {
             var w1 = WORD.Zero(0);

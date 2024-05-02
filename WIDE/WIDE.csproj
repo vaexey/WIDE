@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ScintillaNET\ScintillaNET.csproj" />
     <ProjectReference Include="..\WIDEToolkit\WIDEToolkit.csproj" />
+    <ProjectReference Include="..\YaTabControl\YaTabControl.csproj" />
   </ItemGroup>
 
   <ItemGroup>

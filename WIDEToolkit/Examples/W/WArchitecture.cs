@@ -16,6 +16,8 @@ namespace WIDE.Examples.W
     {
         public WArchitecture()
         {
+            InstructionEndpoint = "IKOD";
+
             // BUS S
             AddBlock(new Register()
             {
@@ -72,15 +74,15 @@ namespace WIDE.Examples.W
                     new RegisterDivisionBlueprint()
                     {
                         NameFormat = "IAD",
-                        Start = 3,
-                        End = 8,
+                        Start = 0,
+                        End = 5,
                         EndpointType = EndpointType.DISJOINTED_RO,
                     }.WithSignal("wyad", "magA", RegisterSignalMode.STORE),
                     new RegisterDivisionBlueprint()
                     {
                         NameFormat = "IKOD",
-                        Start = 0,
-                        End = 3,
+                        Start = 5,
+                        End = 8,
                         EndpointType = EndpointType.DISJOINTED_RO,
                     }
                 },
@@ -170,6 +172,20 @@ namespace WIDE.Examples.W
                     new(AnonALUOperation.Sum(8))
                     {
                         NameFormat = "dod",
+                        SourceEndpointFormats = new() { "JAL_WE", "Ak" },
+                        DestEndpointFormats = new() { "JAL_WY" }
+                    },
+                    new(AnonALUOperation.From((ins, outs) => outs[0].WriteEndpoint(
+                            ins[1].ReadEndpoint(8) - ins[0].ReadEndpoint(8)
+                        )))
+                    {
+                        NameFormat = "ode",
+                        SourceEndpointFormats = new() { "JAL_WE", "Ak" },
+                        DestEndpointFormats = new() { "JAL_WY" }
+                    },
+                    new(AnonALUOperation.From((ins, outs) => outs[0].WriteEndpoint(ins[0].ReadEndpoint(8))))
+                    {
+                        NameFormat = "przep",
                         SourceEndpointFormats = new() { "JAL_WE", "Ak" },
                         DestEndpointFormats = new() { "JAL_WY" }
                     },

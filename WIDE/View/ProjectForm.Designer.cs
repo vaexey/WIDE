@@ -102,6 +102,7 @@
             cpuProperties.Name = "cpuProperties";
             cpuProperties.Size = new Size(240, 504);
             cpuProperties.TabIndex = 0;
+            cpuProperties.PropertyValueChanged += cpuProperties_PropertyValueChanged;
             // 
             // tabPageMemory
             // 

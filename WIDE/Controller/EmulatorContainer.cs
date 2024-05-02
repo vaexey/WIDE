@@ -11,17 +11,24 @@ namespace WIDE.Controller
     {
         public Thread Thread { get; }
 
-        public Emulator Emu { get; set; }
+        public Architecture Arch { get; set; }
+        public Emulator? Emu { get; set; }
 
-        public EmulatorContainer(Emulator emu)
+        public EmulatorContainer(Architecture arch)
         {
-            Emu = emu;
+            Arch = arch;
             Thread = new(EmulatorThreadSub);
         }
 
         public void Start()
         {
             Thread.Start();
+        }
+
+        // TODO
+        public void CreateEmulator()
+        {
+
         }
 
         public void EmulatorThreadSub()

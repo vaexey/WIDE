@@ -13,6 +13,9 @@ namespace WIDEToolkit.Emulator.Blocks.Register
         LOAD = 0x1,
         STORE = 0x2,
 
+        // TODO
+        MERGE = 0x4,
+
         //SUM = 0x4
 
         //LOAD_IMM = LOAD & IMMEDIATE,

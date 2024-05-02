@@ -32,9 +32,12 @@ namespace WIDEToolkit.Emulator
         public int AddressWidth { get; } = 8;
         protected ConstProviderBlock constProvider = new();
 
+        protected DebugBlock debug { get; } = new();
+
         public Architecture()
         {
             AddBlock(constProvider);
+            AddBlock(debug);
         }
 
         public void AddBlock(ArchBlock b)
