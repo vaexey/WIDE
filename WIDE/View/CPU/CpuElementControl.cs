@@ -37,6 +37,7 @@ namespace WIDE.View.CPU
             Block = block;
 
             Font = Styles.FontMonospace(Font.Size);
+            ForeColor = Styles.ColorFont;
 
             // DRAG
             dragButton = new()
@@ -64,7 +65,9 @@ namespace WIDE.View.CPU
                 Top = 15,
                 Left = 15,
                 Text = "",
-                Font = Styles.FontSans(Font.Size)
+                Font = Styles.FontSans(Font.Size),
+                AutoSize = true,
+                BackColor = Color.Transparent // TODO
             };
 
             Controls.Add(statusLabel);
@@ -106,6 +109,8 @@ namespace WIDE.View.CPU
             {
                 dragPreviousLocation = e.Location;
                 Cursor = Cursors.SizeAll;
+
+                BringToFront();
             }
         }
 

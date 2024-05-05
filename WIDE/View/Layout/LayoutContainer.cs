@@ -26,6 +26,8 @@ namespace WIDE.View.Layout
         protected Point HoveringPoint { get; set; } = Point.Empty;
         protected Rectangle HoveringEdge { get; set; } = Rectangle.Empty;
 
+        protected int MaxSidePanelWidth => Width / 2 - 10;
+
         public LayoutContainer()
         {
             Controls.AddRange(new Control[] {
@@ -43,7 +45,7 @@ namespace WIDE.View.Layout
 
                 child.PickerButtonClick += Child_PickerClick;
 
-                if(child != ChildCenter)
+                if (child != ChildCenter)
                     child.Resize += Child_Resized;
             }
 
@@ -63,12 +65,33 @@ namespace WIDE.View.Layout
                     if (!ViewControlOwners.ContainsKey(ctl))
                         ViewControlOwners[ctl] = null;
 
+                    ctl.MouseMove += delegate (object? s, MouseEventArgs e)
+                    {
+                        Child_MouseMove(ViewControlOwners[ctl], e);
+                    };
+
                     ctl.Visible = false;
                     Controls.Add(ctl);
                 }
         }
 
-        public void ChildrenLayout()
+        //protected override void OnControlAdded(ControlEventArgs e)
+        //{
+        //    base.OnControlAdded(e);
+
+        //    if (e.Control is LayoutView lv)
+        //        lv.MouseMove += Child_MouseMove;
+        //}
+
+        //protected override void OnControlRemoved(ControlEventArgs e)
+        //{
+        //    base.OnControlRemoved(e);
+
+        //    if (e.Control is LayoutView lv)
+        //        lv.MouseMove -= Child_MouseMove;
+        //}
+
+        protected void ChildrenLayout()
         {
             //ChildBottom.Size = new Size(100, 100);
             //ChildLeft.Size = new Size(100, 100);
@@ -89,6 +112,15 @@ namespace WIDE.View.Layout
             ChildCenter.Left = ChildLeft.Right;
             ChildCenter.Width = Width - (ChildLeft.Width + ChildRight.Width);
             ChildCenter.Height = Height - (ChildBottom.Height);
+
+            foreach(var child in new List<LayoutChild>() { ChildLeft, ChildRight })
+            {
+                if (MaxSidePanelWidth <= child.CollapsedSize)
+                    continue;
+
+                if (child.Width > MaxSidePanelWidth)
+                    child.Width = MaxSidePanelWidth;
+            }
         }
 
         protected void Child_MouseDown(object? sender, MouseEventArgs e)
@@ -125,8 +157,14 @@ namespace WIDE.View.Layout
             {
                 mouse.Offset(lc.Location);
 
-                if(Hovering != null && Resizing == null)
+                if (Hovering != null && Resizing == null)
                 {
+
+                    if(mouse.X < 50)
+                    {
+
+                    }
+
                     if (!HoveringEdge.Contains(mouse))
                     {
                         Hovering = null;
@@ -173,9 +211,20 @@ namespace WIDE.View.Layout
                             throw new InvalidOperationException("Cannot resize a non-docked LayoutChild");
                     }
 
-                    if(newSize.Width <= Resizing.CollapsedSize || newSize.Height <= Resizing.CollapsedSize)
+                    if(newSize.Width <= Resizing.MinimumUncollapsedSize || newSize.Height <= Resizing.MinimumUncollapsedSize)
                     {
                         return;
+                    }
+
+                    // TODO: vertical too
+                    switch(Resizing.Dock)
+                    {
+                        case DockStyle.Left:
+                        case DockStyle.Right:
+                            if (newSize.Width >= MaxSidePanelWidth)
+                                newSize.Width = MaxSidePanelWidth;
+
+                            break;
                     }
 
                     Resizing.Size = newSize;

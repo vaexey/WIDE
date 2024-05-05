@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WIDE.Examples.W;
 using WIDEToolkit.Emulator;
 using WIDEToolkit.Emulator.Assembly;
 using WIDEToolkit.Emulator.Blocks.ALU;
@@ -33,13 +32,17 @@ namespace WIDECLI.simpleW
 
             MH.Live.Memory = new SingleMemory(256);
 
-            MH.Live.Memory.Write(0, WORD.FromUInt64(36, 8));
-            MH.Live.Memory.Write(1, WORD.FromUInt64(37, 8));
-            MH.Live.Memory.Write(2, WORD.FromUInt64(38, 8));
+            MH.Live.Memory.Write(0, WORD.FromUInt64(34, 8));
+            MH.Live.Memory.Write(1, WORD.FromUInt64(160, 8));
+            MH.Live.Memory.Write(2, WORD.FromUInt64(1, 8));
 
-            MH.Live.Memory.Write(4, WORD.FromUInt64(1, 8));
-            MH.Live.Memory.Write(5, WORD.FromUInt64(2, 8));
-            MH.Live.Memory.Write(6, WORD.FromUInt64(4, 8));
+            //MH.Live.Memory.Write(0, WORD.FromUInt64(36, 8));
+            //MH.Live.Memory.Write(1, WORD.FromUInt64(37, 8));
+            //MH.Live.Memory.Write(2, WORD.FromUInt64(38, 8));
+
+            //MH.Live.Memory.Write(4, WORD.FromUInt64(1, 8));
+            //MH.Live.Memory.Write(5, WORD.FromUInt64(2, 8));
+            //MH.Live.Memory.Write(6, WORD.FromUInt64(4, 8));
 
             while (true)
             {

@@ -5,7 +5,7 @@ ___
 
 **Project goals:**  
 - [x] Emulator blocks skeleton
-- [ ] Customizable von Neumann architecture emulator
+- [x] Customizable von Neumann architecture emulator
 - [ ] Architecture designer
 - [ ] Instruction set designer
 - [ ] Custom instruction set assembler

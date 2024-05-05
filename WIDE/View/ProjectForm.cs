@@ -12,7 +12,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WIDE.Controller;
-using WIDE.Examples.W;
 using WIDE.View;
 using WIDE.View.CPU;
 using WIDEToolkit.Emulator;

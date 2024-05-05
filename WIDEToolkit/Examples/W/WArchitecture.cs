@@ -10,7 +10,7 @@ using WIDEToolkit.Emulator.Blocks.Register;
 using WIDEToolkit.Emulator.Flow;
 using static WIDEToolkit.Emulator.Blocks.Register.Register;
 
-namespace WIDE.Examples.W
+namespace WIDEToolkit.Examples.W
 {
     public class WArchitecture : Architecture
     {
@@ -34,7 +34,7 @@ namespace WIDE.Examples.W
                         EndpointType = EndpointType.BUS,
                     }
                 },
-                Meta = new("magS", 50, 400, 500, 50)
+                Meta = new("magS", 50, 400, 400, 35)
             }) ;
 
             // BUS A
@@ -53,7 +53,7 @@ namespace WIDE.Examples.W
                         EndpointType = EndpointType.BUS,
                     }
                 },
-                Meta = new("magA", 50, 50, 500, 50)
+                Meta = new("magA", 50, 50, 400, 35)
             });
 
             // TODO INSTR REGISTER

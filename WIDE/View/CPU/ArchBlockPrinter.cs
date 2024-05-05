@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WIDEToolkit.Emulator.Blocks;
+using WIDEToolkit.Emulator.Blocks.ALU;
+using WIDEToolkit.Emulator.Blocks.MemHandler;
 using WIDEToolkit.Emulator.Blocks.Register;
 
 namespace WIDE.View.CPU
@@ -14,17 +16,24 @@ namespace WIDE.View.CPU
         {
             var lv = block.GetLive();
 
-            if (lv is null)
+            if(block is ALU alu)
             {
-                return "View will be available when an emulator is created.";
+                return Texts.Emulator.BlockDescALU;
+            }else if (lv is null)
+            {
+                return Texts.Emulator.BlockDescNoLive;
             }
             else if (lv is LiveRegister reg)
             {
-                return "REG!";
+                return reg.Data.ToUInt64().ToString();
+            }
+            else if(lv is LiveMemHandler memh)
+            {
+                return memh.Memory.GetSize().ToString();
             }
             else
             {
-                return "This block does not have a view available.";
+                return Texts.Emulator.BlockDescUndefined;
             }
         }
     }

@@ -5,7 +5,6 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using WIDE.Controller;
-using WIDE.Examples.W;
 using WIDE.View.Layout;
 using WIDE.View.Utility;
 using WIDEToolkit.Emulator;
@@ -20,11 +19,10 @@ namespace WIDE.View.CPU
         PropertyGrid propertyGrid => MainForm.GetView<PropertiesView>().Grid;
 
         private System.Windows.Forms.Timer timer;
+        private Label centerLabel;
 
         List<CpuElementControl> cpuElementControls = new();
         public ArchBlock? SelectedCpuBlock = null;
-
-        EmulatorContainer emu;
 
         public CpuView() : base()
         {
@@ -37,17 +35,19 @@ namespace WIDE.View.CPU
                 Interval = 100,
                 Enabled = true
             };
-
             timer.Tick += timer_Tick;
+
+            centerLabel = new()
+            {
+                AutoSize = false,
+                Dock = DockStyle.Fill,
+                Text = Texts.Emulator.CPUViewEmpty,
+                TextAlign = ContentAlignment.MiddleCenter,
+            };
+            Controls.Add(centerLabel);
 
             HandleCreated += cpuView_Handle;
             Click += cpuView_Click;
-
-            var a = new WArchitecture();
-            a.CreateLive();
-            Emulator e = new(a, new WRawInstructionSet(a));
-
-            emu = new(a) { Emu = e };
         }
 
         protected override void OnMainFormReady(EventArgs e)
@@ -111,7 +111,9 @@ namespace WIDE.View.CPU
 
             if (b is null)
             {
-                propertyGrid.SelectedObject = null;
+                //propertyGrid.SelectedObject = null;
+                if(MainForm.EContainer is not null)
+                    propertyGrid.SelectedObject = MainForm.EContainer.Arch;
 
                 return;
             }
@@ -119,14 +121,23 @@ namespace WIDE.View.CPU
             propertyGrid.SelectedObject = b;
         }
 
-        private void DrawArch()
+        public void DrawArch()
         {
             foreach (var cpb in cpuElementControls)
                 Controls.Remove(cpb);
 
             cpuElementControls.Clear();
+            
+            if(!MainForm.EContainer.Arch.Blocks.Where(b => !b.Meta.Hidden).Any())
+            {
+                centerLabel.Visible = true;
 
-            foreach (var b in emu.Emu.Arch.Blocks)
+                return;
+            }
+
+            centerLabel.Visible = false;
+
+            foreach (var b in MainForm.EContainer.Arch.Blocks)
             {
                 var meta = b.Meta;
 
@@ -143,6 +154,11 @@ namespace WIDE.View.CPU
                 cpb.Click += cpuView_element_Click;
                 cpb.MetaPositionChanged += cpuView_meta_changed;
             }
+        }
+
+        public void Command_ResetEmulator()
+        {
+            
         }
     }
 }

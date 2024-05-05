@@ -21,6 +21,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="WinForms.DataVisualization" Version="1.9.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ScintillaNET\ScintillaNET.csproj" />
     <ProjectReference Include="..\WIDEToolkit\WIDEToolkit.csproj" />
     <ProjectReference Include="..\YaTabControl\YaTabControl.csproj" />

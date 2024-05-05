@@ -20,55 +20,81 @@ namespace WIDEToolkit.Emulator
         public int FetchCycleIndex { get; set; } = 1;
         public bool RefetchAfterInstruction { get; set; } = false;
 
+        public double CPS => Paused ? 0 : cycleCount / DateTime.Now.Subtract(cycleCountStart).TotalSeconds;
+        protected DateTime cycleCountStart = DateTime.Now;
+        protected int cycleCount = 0;
+
+        public bool Paused { get; protected set; } = true;
+        public bool PauseOnCycle { get; set; } = false;
+        public bool PauseOnInstruction { get; set; } = false;
+
+        public EmulatorLoopMode Mode { get; set; } = EmulatorLoopMode.CYCLE;
+
         public Emulator(Architecture arch, RawInstructionSet set)
         {
             Arch = arch;
             Set = set;
         }
 
+        public void Loop()
+        {
+            if (Paused)
+                return;
+
+            switch(Mode)
+            {
+                case EmulatorLoopMode.CYCLE:
+                    Cycle();
+                    break;
+                case EmulatorLoopMode.INSTRUCTION:
+                    Instruction();
+                    break;
+            }
+        }
+        
+        public void Pause()
+        {
+            Paused = true;
+            cycleCount = 0;
+        }
+
+        public void Unpause()
+        {
+            Paused = false;
+        } 
+
+        public void Reset()
+        {
+            CycleIndex = 0;
+            CurrentInstruction = null;
+        }
+
+        public void Instruction()
+        {
+            var p = Paused;
+            var poi = PauseOnInstruction;
+            var poc = PauseOnCycle;
+
+            Paused = false;
+            PauseOnCycle = false;
+            PauseOnInstruction = true;
+
+            while (!Paused)
+                Cycle();
+
+            Paused = p;
+            PauseOnInstruction = poi;
+            PauseOnCycle = poc;
+
+            if (PauseOnInstruction)
+                Pause();
+        }
+
         public void Cycle()
         {
-            //if (CurrentInstruction != null &&
-            //    CycleIndex >= CurrentInstruction.Cycles.Length)
-            //    CurrentInstruction = null;
-            //if(CurrentInstruction != null)
-            //{
-            //    if(CycleIndex >= CurrentInstruction.Cycles.Length)
-            //    {
-            //        CurrentInstruction = null;
-            //    }
-            //    else if (CurrentInstruction.Cycles[CycleIndex][ForkValue].Length == 0)
-            //    {
-            //        CurrentInstruction = null;
-            //    }
-            //}
-
-            //if(CurrentInstruction == null)
-            //{
-            //    Fetch();
-            //    return;
-            //}
-
-            //DoSignals();
-
-            //if (CurrentInstruction != null)
-            //{
-            //    if (CycleIndex >= CurrentInstruction.Cycles.Length
-            //        || CurrentInstruction.Cycles[CycleIndex][ForkValue].Length == 0)
-            //    {
-            //        CycleIndex = 0;
-            //    }
-            //}
-
-            //if(CycleIndex == FetchCycleIndex)
-            //{
-            //    Fetch();
-            //}
-
-            //if (CurrentInstruction != null)
-            //    DoSignals();
-            //else
-            //    Fetch();
+            if (cycleCount == 0)
+                cycleCountStart = DateTime.Now;
+            cycleCount++;
 
             if (CurrentInstruction != null)
             {
@@ -82,7 +108,8 @@ namespace WIDEToolkit.Emulator
 
                     CycleIndex = 0;
 
-                    //return;
+                    if (PauseOnInstruction)
+                        Pause();
                 }
             }
 
@@ -92,6 +119,9 @@ namespace WIDEToolkit.Emulator
                 Fetch();
 
             DoSignals();
+
+            if (PauseOnCycle)
+                Pause();
         }
 
         protected void Fetch()

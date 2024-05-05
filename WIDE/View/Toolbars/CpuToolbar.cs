@@ -18,8 +18,8 @@ namespace WIDE.View.Toolbars
             //};
 
             //Items.Add(nextBtn);
-            Items.Add(ToolbarItems.ButtonArchLiveSet());
-            Items.Add(ToolbarItems.ButtonArchLiveUnset());
+            //Items.Add(ToolbarItems.ButtonArchLiveSet());
+            //Items.Add(ToolbarItems.ButtonArchLiveUnset());
         }
     }
 }

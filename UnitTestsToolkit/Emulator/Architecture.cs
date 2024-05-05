@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WIDE.Examples.W;
 using WIDEToolkit.Emulator;
 using WIDEToolkit.Emulator.Blocks.Live;
 using WIDEToolkit.Emulator.Blocks.Register;

@@ -13,5 +13,7 @@ namespace WIDE.View
 
         public static LayoutTranslation Layout => Translation.Layout;
         public static GlobalTranslation Global => Translation.Global;
+        public static EmulatorTranslation Emulator => Translation.Emulator;
+        public static ScriptTranslation Script => Translation.Script;
     }
 }

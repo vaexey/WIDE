@@ -17,7 +17,34 @@ namespace WIDE.View.Utility
             Text = "Properties";
             Grid = new()
             {
-                Dock = DockStyle.Fill
+                Dock = DockStyle.Fill,
+
+                BackColor = Styles.ColorBackground,
+                CategoryForeColor = Styles.ColorFont,
+
+                ViewBackColor = Styles.ColorInner,
+                ViewForeColor = Styles.ColorFont,
+
+                CommandsBackColor = Styles.ColorBackground,
+                CommandsForeColor = Styles.ColorFont,
+                LineColor = Styles.ColorBackground,
+
+                CategorySplitterColor = Styles.ColorFont,
+
+                CommandsBorderColor = Styles.ColorFont,
+
+                SelectedItemWithFocusBackColor = Styles.ColorSelection,
+                SelectedItemWithFocusForeColor = Styles.ColorFont,
+
+                HelpBackColor = Styles.ColorInner,
+                HelpForeColor = Styles.ColorFont,
+
+                //CommandsActiveLinkColor = Styles.ColorSelection,
+                //CommandsDisabledLinkColor = Styles.ColorSelection,
+                //CommandsLinkColor = Styles.ColorSelection,
+                //DisabledItemForeColor = Styles.ColorSelection,
+                //HelpBorderColor = Styles.ColorSelection,
+                //ViewBorderColor = Styles.ColorSelection,
             };
 
             Controls.Add(Grid);

@@ -18,8 +18,8 @@ namespace WIDEToolkit.Emulator
         protected List<ArchBlock> blocks = new();
         public ReadOnlyCollection<ArchBlock> Blocks => blocks.AsReadOnly();
 
-        public IEnumerable<Register> Registers =>
-            blocks.Where(x => x.GetType().IsAssignableTo(typeof(Register))).Select(x => (Register)x);
+        //public IEnumerable<Register> Registers =>
+        //    blocks.Where(x => x.GetType().IsAssignableTo(typeof(Register))).Select(x => (Register)x);
 
         protected List<Signal> signals = new();
         public ReadOnlyCollection<Signal> Signals => signals.AsReadOnly();
@@ -31,6 +31,10 @@ namespace WIDEToolkit.Emulator
 
         public int AddressWidth { get; } = 8;
         protected ConstProviderBlock constProvider = new();
+
+        protected List<Signal> commitedSignals = new();
+        protected List<Signal> currentSignals = new();
+        public ReadOnlyCollection<Signal> CommitedSignals => commitedSignals.AsReadOnly();
 
         protected DebugBlock debug { get; } = new();
 
@@ -97,6 +101,8 @@ namespace WIDEToolkit.Emulator
 
         public void ExecSingleSignal(Signal sg)
         {
+            currentSignals.Add(sg);
+
             var lb = sg.Owner.GetLive();
 
             lb.ExecuteSignal(this, sg);
@@ -121,6 +127,9 @@ namespace WIDEToolkit.Emulator
             {
                 e.GetLive().Commit();
             }
+
+            commitedSignals = currentSignals;
+            currentSignals = new();
         }
     }
 }

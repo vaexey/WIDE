@@ -7,23 +7,31 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WIDE.Controller;
 using WIDE.View.Controls;
 using WIDE.View.CPU;
+using WIDE.View.Toolbars;
 using WIDE.View.Utility;
+using WIDEToolkit.Emulator;
+using WIDEToolkit.Examples.W;
 using YaTabControl;
 
 namespace WIDE.View
 {
     public partial class MainParentForm : Form
     {
-        CpuView Cpu = new();
+        public EmulatorContainer EContainer = new();
 
-        PropertiesView Properties = new();
+        public ScriptEngine Commands = new();
+
+        CpuView CpuView = new();
+        PropertiesView PropertiesView = new();
+        StatusView StatusView = new();
 
         public EventHandler LayoutReady = delegate { };
 
         private IEnumerable<YaTabPage> Views => new YaTabPage[] {
-            Cpu, Properties
+            CpuView, PropertiesView
         };
 
         public T GetView<T>() where T : YaTabPage
@@ -40,21 +48,58 @@ namespace WIDE.View
             ForeColor = Styles.ColorFont;
             BackColor = Styles.ColorBackground;
             Font = Styles.FontSans(Font.Size);
+            Text = Texts.Global.WindowTitle;
+            Icon = Resources.WIDE_icon;
 
             titleMenuStrip.BackColor = Styles.ColorBackground;
             titleMenuStrip.ForeColor = Styles.ColorFont;
             titleMenuStrip.Renderer = new StyledToolStripRenderer();
+
+            toolStrip1.Items.AddRange(new ToolStripItem[]
+            {
+                ToolbarItems.Create(CommandEnum.CPU_UNPAUSE),
+                ToolbarItems.Create(CommandEnum.CPU_PAUSE),
+                ToolbarItems.Create(CommandEnum.CPU_STEP_CYCLE),
+                ToolbarItems.Create(CommandEnum.CPU_STEP_INSTRUCTION),
+            });
+
+            foreach (var item in toolStrip1.Items)
+            {
+                if(item is CommandToolStripButton ctsb)
+                    ctsb.CommandTriggered += delegate(object? s, string st)
+                    {
+                        Commands.Execute(st);
+                        };
+            }
+
+            ScriptInitializer.RegisterCommands(this);
         }
 
         private void MainParentForm_Load(object sender, EventArgs e)
         {
-            layoutContainer.ViewControls.Add(Cpu);
-            layoutContainer.ViewControls.Add(Properties);
+            layoutContainer.ViewControls.Add(CpuView);
+            layoutContainer.ViewControls.Add(PropertiesView);
+            layoutContainer.ViewControls.Add(StatusView);
 
-            layoutContainer.SetViewOwner(Cpu, layoutContainer.ChildCenter);
-            layoutContainer.SetViewOwner(Properties, layoutContainer.ChildRight);
+            layoutContainer.SetViewOwner(CpuView, layoutContainer.ChildCenter);
+            layoutContainer.SetViewOwner(PropertiesView, layoutContainer.ChildRight);
+            layoutContainer.SetViewOwner(StatusView, layoutContainer.ChildBottom);
 
             LayoutReady(this, EventArgs.Empty);
+
+            CpuView.DrawArch();
+
+            EContainer.Start();
+        }
+
+        private void cpuStripMenuItem_Click(object sender, EventArgs e)
+        {
+            layoutContainer.SetViewOwner(CpuView, layoutContainer.ChildCenter);
+        }
+
+        private void MainParentForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            EContainer.Dispose();
         }
     }
 }

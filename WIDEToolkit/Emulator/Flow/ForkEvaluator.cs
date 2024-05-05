@@ -8,11 +8,21 @@ namespace WIDEToolkit.Emulator.Flow
 {
     public class ForkEvaluator
     {
-        // TODO
+        public ForkComponent[] Components { get; }
+
+        public ForkEvaluator(ForkComponent[]? components = null)
+        {
+            Components = components ?? Array.Empty<ForkComponent>();
+        }
 
         public virtual int GetForkValue(Architecture arch)
         {
-            return 0;
+            int fork = 0;
+
+            foreach (var component in Components)
+                fork += component.GetComponent(arch);
+
+            return fork;
         }
     }
 }

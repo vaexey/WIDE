@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualBasic.Devices;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,7 @@ namespace WIDE.View.Layout
 
         public int CollapsedSize { get; set; } = 20;
         protected int LastUncollapsedSize { get; set; } = 250;
+        public int MinimumUncollapsedSize { get; set; } = 70;
 
         public EventHandler PickerButtonClick { get; set; } = delegate { };
 
@@ -42,6 +44,9 @@ namespace WIDE.View.Layout
             }
             set
             {
+                if (value == Collapsed)
+                    return;
+
                 switch (Dock)
                 {
                     case DockStyle.Left:
@@ -69,6 +74,8 @@ namespace WIDE.View.Layout
                     default:
                         throw new InvalidOperationException("Cannot access Collapsed property on a non-docked LayoutChild.");
                 }
+
+                LastUncollapsedSize = Math.Max(LastUncollapsedSize, MinimumUncollapsedSize);
             }
         }
 
@@ -187,8 +194,7 @@ namespace WIDE.View.Layout
                 ActiveColor = Styles.ColorBackground,
 
                 InactiveColor = Styles.ColorInner,
-                TabDrawer = ContentTabDrawer
-
+                TabDrawer = ContentTabDrawer,
             };
             Content.MouseMove += Content_MouseMove;
             Content.MouseUp += Content_MouseUp;
@@ -218,6 +224,14 @@ namespace WIDE.View.Layout
         {
             base.OnResize(eventargs);
 
+            if (Content is null)
+                return;
+
+            //if (Width < CollapsedSize)
+            //    Width = MinimumUncollapsedSize;
+            //if(Height < CollapsedSize)
+            //    Height= MinimumUncollapsedSize;
+
             switch (Dock)
             {
                 case DockStyle.Left:
@@ -235,6 +249,10 @@ namespace WIDE.View.Layout
                 case DockStyle.Bottom:
                     Content.Location = new(0, 0);
                     Content.Size = new(Width, Height - TitlePanel.Height);
+                    break;
+                default:
+                    Content.Location = new(0, 0);
+                    Content.Size = Size;
                     break;
             }
         }

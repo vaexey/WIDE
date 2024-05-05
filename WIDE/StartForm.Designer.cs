@@ -28,20 +28,34 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
+            startTimer = new System.Windows.Forms.Timer(components);
             SuspendLayout();
+            // 
+            // startTimer
+            // 
+            startTimer.Enabled = true;
+            startTimer.Tick += startTimer_Tick;
             // 
             // StartForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            BackgroundImage = Resources.WIDE_splash;
+            BackgroundImageLayout = ImageLayout.Zoom;
+            ClientSize = new Size(640, 320);
+            DoubleBuffered = true;
+            FormBorderStyle = FormBorderStyle.None;
             Name = "StartForm";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Form1";
-            WindowState = FormWindowState.Minimized;
+            TopMost = true;
             Load += StartForm_Load;
+            Click += StartForm_Click;
             ResumeLayout(false);
         }
 
         #endregion
+        private System.Windows.Forms.Timer startTimer;
     }
 }

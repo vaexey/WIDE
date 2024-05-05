@@ -47,7 +47,7 @@ namespace WIDEToolkit.Examples.W
                         "pisz wyl wea",
                     }),
                 RawInstruction.FromStrings(
-                    arch, WORD.FromUInt64(50ul), "SOB", new() {
+                    arch, WORD.FromUInt64(5ul), "SOB", new() {
                         "czyt wys wei il",
                         "wyad wea wel"
                     })

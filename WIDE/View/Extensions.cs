@@ -42,5 +42,15 @@ namespace WIDE.View
         {
             target.SetToolTip(target, tip);
         }
+
+        public static int MeasureRight(this Label lbl)
+        {
+            return lbl.Left + TextRenderer.MeasureText(lbl.Text, lbl.Font).Width;
+        }
+
+        public static int MeasureBottom(this Label lbl)
+        {
+            return lbl.Top + TextRenderer.MeasureText(lbl.Text, lbl.Font).Height;
+        }
     }
 }

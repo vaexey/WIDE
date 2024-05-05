@@ -2983,6 +2983,16 @@ namespace WIDE {
         /// <summary>
         ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap WIDE_splash {
+            get {
+                object obj = ResourceManager.GetObject("WIDE_splash", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Wrench {
             get {
                 object obj = ResourceManager.GetObject("Wrench", resourceCulture);

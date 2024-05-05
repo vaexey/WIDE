@@ -36,8 +36,10 @@
             label2 = new Label();
             label1 = new Label();
             titleMenuStrip = new MenuStrip();
-            toolStripMenuItem1 = new ToolStripMenuItem();
-            toolStripMenuItem2 = new ToolStripMenuItem();
+            fileToolStripMenuItem = new ToolStripMenuItem();
+            viewMenuStripItem = new ToolStripMenuItem();
+            cpuStripMenuItem = new ToolStripMenuItem();
+            toolStrip1 = new ToolStrip();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             titleMenuStrip.SuspendLayout();
             SuspendLayout();
@@ -101,41 +103,62 @@
             titleMenuStrip.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             titleMenuStrip.AutoSize = false;
             titleMenuStrip.Dock = DockStyle.None;
-            titleMenuStrip.Items.AddRange(new ToolStripItem[] { toolStripMenuItem1 });
+            titleMenuStrip.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, viewMenuStripItem });
             titleMenuStrip.Location = new Point(0, 0);
             titleMenuStrip.Name = "titleMenuStrip";
             titleMenuStrip.Size = new Size(975, 24);
             titleMenuStrip.TabIndex = 9;
             titleMenuStrip.Text = "menuStrip1";
             // 
-            // toolStripMenuItem1
+            // fileToolStripMenuItem
             // 
-            toolStripMenuItem1.DropDownItems.AddRange(new ToolStripItem[] { toolStripMenuItem2 });
-            toolStripMenuItem1.Name = "toolStripMenuItem1";
-            toolStripMenuItem1.Size = new Size(125, 20);
-            toolStripMenuItem1.Text = "toolStripMenuItem1";
+            fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            fileToolStripMenuItem.Size = new Size(37, 20);
+            fileToolStripMenuItem.Text = "File";
             // 
-            // toolStripMenuItem2
+            // viewMenuStripItem
             // 
-            toolStripMenuItem2.Name = "toolStripMenuItem2";
-            toolStripMenuItem2.Size = new Size(180, 22);
-            toolStripMenuItem2.Text = "toolStripMenuItem2";
+            viewMenuStripItem.DropDownItems.AddRange(new ToolStripItem[] { cpuStripMenuItem });
+            viewMenuStripItem.Name = "viewMenuStripItem";
+            viewMenuStripItem.Size = new Size(44, 20);
+            viewMenuStripItem.Text = "View";
+            // 
+            // cpuStripMenuItem
+            // 
+            cpuStripMenuItem.Name = "cpuStripMenuItem";
+            cpuStripMenuItem.Size = new Size(97, 22);
+            cpuStripMenuItem.Text = "CPU";
+            cpuStripMenuItem.Click += cpuStripMenuItem_Click;
+            // 
+            // toolStrip1
+            // 
+            toolStrip1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            toolStrip1.AutoSize = false;
+            toolStrip1.BackColor = Color.FromArgb(64, 64, 64);
+            toolStrip1.Dock = DockStyle.None;
+            toolStrip1.Location = new Point(9, 41);
+            toolStrip1.Name = "toolStrip1";
+            toolStrip1.Size = new Size(582, 25);
+            toolStrip1.TabIndex = 10;
+            toolStrip1.Text = "toolStrip1";
             // 
             // MainParentForm
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleMode = AutoScaleMode.None;
             ClientSize = new Size(1050, 487);
+            Controls.Add(toolStrip1);
             Controls.Add(pictureBox1);
             Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(label1);
             Controls.Add(layoutContainer);
             Controls.Add(titleMenuStrip);
+            DoubleBuffered = true;
             MainMenuStrip = titleMenuStrip;
             MinimumSize = new Size(640, 480);
             Name = "MainParentForm";
-            Text = "MDIParentForm";
+            Text = "MainParentForm";
+            FormClosing += MainParentForm_FormClosing;
             Load += MainParentForm_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             titleMenuStrip.ResumeLayout(false);
@@ -153,7 +176,9 @@
         private Label label2;
         private Label label1;
         private MenuStrip titleMenuStrip;
-        private ToolStripMenuItem toolStripMenuItem1;
-        private ToolStripMenuItem toolStripMenuItem2;
+        private ToolStripMenuItem viewMenuStripItem;
+        private ToolStripMenuItem cpuStripMenuItem;
+        private ToolStripMenuItem fileToolStripMenuItem;
+        private ToolStrip toolStrip1;
     }
 }
