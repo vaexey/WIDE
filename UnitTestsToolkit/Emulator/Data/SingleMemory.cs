@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WIDEToolkit.Emulator.Data;
-using WIDEToolkit.Emulator.Flow;
 
 namespace ToolkitUnitTests.Emulator.Data
 {

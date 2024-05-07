@@ -9,6 +9,8 @@ namespace WIDEToolkit.Emulator.Data
 {
     public abstract class Memory
     {
+        public string? DivisionName { get; set; } = null;
+
         public abstract int GetSize();
         public abstract int GetWordSize();
 

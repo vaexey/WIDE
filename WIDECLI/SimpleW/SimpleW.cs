@@ -16,7 +16,7 @@ namespace WIDECLI.simpleW
     internal class SimpleW
     {
         private Emulator Emu;
-        private RawInstructionSet ris;
+        private WRawInstructionSet ris;
         private WArchitecture W = new();
         private MemHandler MH;
 
@@ -32,9 +32,16 @@ namespace WIDECLI.simpleW
 
             MH.Live.Memory = new SingleMemory(256);
 
-            MH.Live.Memory.Write(0, WORD.FromUInt64(34, 8));
-            MH.Live.Memory.Write(1, WORD.FromUInt64(160, 8));
-            MH.Live.Memory.Write(2, WORD.FromUInt64(1, 8));
+            MH.Live.Memory.Write(0, ris.Build("POB", 10));
+            MH.Live.Memory.Write(1, ris.Build("DOD", 11));
+            MH.Live.Memory.Write(2, ris.Build("LAD", 10));
+            MH.Live.Memory.Write(3, ris.Build("SOB", 0));
+
+            MH.Live.Memory.Write(11, WORD.FromUInt64(1));
+
+            //MH.Live.Memory.Write(0, WORD.FromUInt64(34, 8));
+            //MH.Live.Memory.Write(1, WORD.FromUInt64(160, 8));
+            //MH.Live.Memory.Write(2, WORD.FromUInt64(1, 8));
 
             //MH.Live.Memory.Write(0, WORD.FromUInt64(36, 8));
             //MH.Live.Memory.Write(1, WORD.FromUInt64(37, 8));

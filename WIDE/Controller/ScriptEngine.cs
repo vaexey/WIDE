@@ -35,12 +35,7 @@ namespace WIDE.Controller
             }
             catch(ScriptException ex)
             {
-                //MessageBox.Show(ex.Message, Texts.Global.WindowTitle, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                var msf = new MessageForm("Scripts", ex.Message, ex.Error);
-
-                msf.ShowDialog();
-
-                msf.Dispose();
+                Messages.ShowException(ex);
             }
         }
 

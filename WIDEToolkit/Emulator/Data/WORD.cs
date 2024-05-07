@@ -154,11 +154,14 @@ namespace WIDEToolkit.Emulator.Data
             int idx2 = (start + w._width - 1) / 8;
 
             int woff = start % 8;
-            int wmask = ~(0xff << woff) & 0xff;
+            int wmask = (0xff << woff) & 0xff;
+
+            if (idx1 == idx2)
+                wmask &= (0xff >> (8 - woff - w._width)) & 0xff;
 
             _bytes[idx1] = (byte)(
-                (_bytes[idx1] & wmask) |
-                (w._bytes[0] << woff)
+                (_bytes[idx1] & ~wmask) |
+                ((w._bytes[0] << woff) & wmask)
              );
 
             if (idx1 == idx2)

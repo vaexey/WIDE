@@ -258,6 +258,14 @@ namespace WIDEToolkit.Examples.W
 
                 Meta = new("PaO", 350, 200, 100, 100)
             });
+
+            MemoryBlock.MemoryDivisions.Add(
+                new()
+                {
+                    DivisionName = "PaO",
+                    Size = 256,
+                    WordSize = 8
+                });
         }
     }
 }

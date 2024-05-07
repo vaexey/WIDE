@@ -1371,7 +1371,11 @@ namespace YaTabControl
                     ytp = Controls[i] as YaTabPage;
                     if (ytp != null && images != null && ytp.ImageIndex > -1 && ytp.ImageIndex < images.Images.Count && images.Images[ytp.ImageIndex] != null)
                     {
-                        pea.Graphics.DrawImage(images.Images[ytp.ImageIndex], 1.5f * yaMargin, yaMargin);
+                        // TabImage draw fix
+                        pea.Graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
+                        pea.Graphics.DrawImage(images.Images[ytp.ImageIndex], 1.5f * yaMargin, 1.5f * yaMargin);
+                        pea.Graphics.InterpolationMode = InterpolationMode.Default;
+
                         if (i != yaSelectedIndex)
                         {
                             pea.Graphics.DrawString(Controls[i].Text, yaTabFont, yaForeBrush, 2.5f * yaMargin + images.Images[ytp.ImageIndex].Width, 1.5f * yaMargin);

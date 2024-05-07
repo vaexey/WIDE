@@ -8,17 +8,19 @@ using WIDEToolkit.Emulator.Flow;
 
 namespace WIDEToolkit.Emulator.Blocks.MemHandler
 {
-    public class LiveMemHandler : LiveBlock
+    public class LiveMemHandler : LiveBlock, IMemoryAttachable
     {
         public Memory Memory { get; set; }
         public MemHandler Parent { get; }
 
+        public string Division { get; }
         public string AddressEndpoint { get; }
 
-        public LiveMemHandler(MemHandler parent, string addressEndpoint, IEnumerable<Signal> signals, Memory? mem = null)
+        public LiveMemHandler(MemHandler parent, string addressEndpoint, string division, IEnumerable<Signal> signals, Memory? mem = null)
         {
             Parent = parent;
             AddressEndpoint = addressEndpoint;
+            Division = division;
             Signals = signals.ToArray();
 
             Memory = mem ?? new SingleMemory(0);
@@ -63,6 +65,13 @@ namespace WIDEToolkit.Emulator.Blocks.MemHandler
 
                 return;
             }
+        }
+
+        public string GetDivisionName() => Division;
+
+        public void AttachMemory(Memory memory)
+        {
+            Memory = memory;
         }
     }
 }

@@ -15,6 +15,7 @@ namespace WIDEToolkit.Emulator.Blocks.MemHandler
         [Description("Register base name. Used in custom formats to create signals and internal emulator endpoints.")]
         [Category("General")]
         public string BaseName { get; set; } = "RAM";
+        public string DivisionFormat { get; set; } = "{1}";
 
         public Regex NameRegex { get; set; } = new Regex("(^.*$)");
 
@@ -56,6 +57,7 @@ namespace WIDEToolkit.Emulator.Blocks.MemHandler
             Live = new LiveMemHandler(
                 this,
                 string.Format(AddresEndpointFormat, regex),
+                string.Format(DivisionFormat, regex),
                 sigs,
                 null
             );

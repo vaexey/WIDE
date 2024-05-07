@@ -14,8 +14,11 @@ namespace WIDE.Controller
     {
         public Thread Thread { get; }
 
-        public Architecture Arch { get; set; }
+        public Architecture Arch => Emu.Arch;
+
         public Emulator Emu { get; set; }
+
+        public double? LoopSleep { get; set; } = null;
 
         private List<Action> invokeQueue = new();
         private object Lock = new object();
@@ -28,17 +31,32 @@ namespace WIDE.Controller
             //Arch = arch ?? new Architecture();
             //Emu = new Emulator(Arch, new());
 
-            Arch = new WArchitecture();
-            Arch.CreateLive();
-            Emu = new Emulator(Arch, new WRawInstructionSet(Arch));
+            arch = new WArchitecture();
+            arch.CreateLive();
+            var riset = new WRawInstructionSet(arch);
+            Emu = new Emulator(arch, riset);
 
-            var MH = (MemHandler)Arch.Blocks.Where(b => b.GetType() == typeof(MemHandler)).First();
+            //var mem = new SingleMemory(256);
+            //mem.DivisionName = "PaO";
 
-            MH.Live.Memory = new SingleMemory(256);
+            //Memory.Add(mem);
+            //arch.AttachMemoryDivisions(Memory);
 
-            MH.Live.Memory.Write(0, WORD.FromUInt64(34, 8));
-            MH.Live.Memory.Write(1, WORD.FromUInt64(160, 8));
-            MH.Live.Memory.Write(2, WORD.FromUInt64(1, 8));
+            //var MH = (MemHandler)Arch.Blocks.Where(b => b.GetType() == typeof(MemHandler)).First();
+
+            //MH.Live.Memory = Memory;
+
+            var mem = arch.MemoryBlock.Live.Get("PaO");
+            //mem.Write(0, WORD.FromUInt64(35, 8));
+            //mem.Write(1, WORD.FromUInt64(132,8));
+            //mem.Write(2, WORD.FromUInt64(160, 8));
+            //mem.Write(3, WORD.FromUInt64(1, 8));
+            mem.Write(0, riset.Build("POB", 10));
+            mem.Write(1, riset.Build("DOD", 11));
+            mem.Write(2, riset.Build("LAD", 10));
+            mem.Write(3, riset.Build("SOB", 0));
+
+            mem.Write(11, WORD.FromUInt64(1));
 
             Thread = new(EmulatorThreadSub);
         }
@@ -67,8 +85,24 @@ namespace WIDE.Controller
                     Emu.Loop();
                 }
 
-                if(Emu.Paused)
+                //if(Emu.Paused || LoopSleep is not null)
+                //    Thread.Sleep(LoopSleep ?? 1);
+                if (Emu.Paused)
                     Thread.Sleep(1);
+                else
+                {
+                    if(LoopSleep is double ms)
+                    {
+                        if (ms > 100)
+                            Thread.Sleep((int)ms);
+                        else
+                        {
+                            var tim = DateTime.Now;
+                            while (DateTime.Now.Subtract(tim).TotalMilliseconds < ms)
+                            { }
+                        }
+                    }
+                }
             }
 
             _thread = false;
@@ -86,7 +120,30 @@ namespace WIDE.Controller
         {
             lock (Lock)
             {
-                Emu.Pause();
+                Emu.Pause(EmulatorPauseReason.USER);
+            }
+        }
+
+        public void Invoke(Action action)
+        {
+            lock(Lock)
+            {
+                invokeQueue.Add(action);
+            }
+        }
+
+        public void WaitUntilInvokeCompleted(int? sleep = null)
+        {
+            while(true)
+            {
+                lock(Lock)
+                {
+                    if (invokeQueue.Count == 0)
+                        break;
+                }
+
+                if(sleep is int ms)
+                    Thread.Sleep(ms);
             }
         }
 
@@ -94,7 +151,7 @@ namespace WIDE.Controller
         {
             lock (Lock)
             {
-                invokeQueue.Add(() =>
+                Invoke(() =>
                 {
                     Emu.Cycle();
                 });
@@ -104,7 +161,7 @@ namespace WIDE.Controller
         {
             lock (Lock)
             {
-                invokeQueue.Add(() =>
+                Invoke(() =>
                 {
                     Emu.Instruction();
                 });

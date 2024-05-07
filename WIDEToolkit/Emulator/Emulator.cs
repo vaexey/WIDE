@@ -25,6 +25,7 @@ namespace WIDEToolkit.Emulator
         protected int cycleCount = 0;
 
         public bool Paused { get; protected set; } = true;
+        public EmulatorPauseReason PauseReason { get; protected set; } = EmulatorPauseReason.UNKNOWN;
         public bool PauseOnCycle { get; set; } = false;
         public bool PauseOnInstruction { get; set; } = false;
 
@@ -52,15 +53,17 @@ namespace WIDEToolkit.Emulator
             }
         }
         
-        public void Pause()
+        public void Pause(EmulatorPauseReason reason)
         {
             Paused = true;
+            PauseReason = reason;
             cycleCount = 0;
         }
 
         public void Unpause()
         {
             Paused = false;
+            PauseReason = EmulatorPauseReason.UNKNOWN;
         } 
 
         public void Reset()
@@ -82,12 +85,15 @@ namespace WIDEToolkit.Emulator
             while (!Paused)
                 Cycle();
 
-            Paused = p;
             PauseOnInstruction = poi;
             PauseOnCycle = poc;
 
+            
+
+            Paused = p;
+
             if (PauseOnInstruction)
-                Pause();
+                Pause(EmulatorPauseReason.INSTRUCTION);
         }
 
         public void Cycle()
@@ -109,7 +115,7 @@ namespace WIDEToolkit.Emulator
                     CycleIndex = 0;
 
                     if (PauseOnInstruction)
-                        Pause();
+                        Pause(EmulatorPauseReason.INSTRUCTION);
                 }
             }
 
@@ -121,7 +127,7 @@ namespace WIDEToolkit.Emulator
             DoSignals();
 
             if (PauseOnCycle)
-                Pause();
+                Pause(EmulatorPauseReason.CYCLE);
         }
 
         protected void Fetch()

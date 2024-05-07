@@ -21,6 +21,8 @@ namespace WIDE.View.Layout
         public LayoutChild ChildRight { get; set; } = new();
         public LayoutChild ChildBottom { get; set; } = new();
 
+        protected ImageList childrenImageList { get; set; } = new();
+
         protected LayoutChild? Hovering { get; set; } = null;
         protected LayoutChild? Resizing { get; set; } = null;
         protected Point HoveringPoint { get; set; } = Point.Empty;
@@ -39,6 +41,7 @@ namespace WIDE.View.Layout
 
             foreach (var child in LayoutChildren)
             {
+                child.Content.ImageList = childrenImageList;
                 child.MouseMove += Child_MouseMove;
                 child.MouseDown += Child_MouseDown;
                 child.MouseUp += Child_MouseUp;
@@ -159,12 +162,6 @@ namespace WIDE.View.Layout
 
                 if (Hovering != null && Resizing == null)
                 {
-
-                    if(mouse.X < 50)
-                    {
-
-                    }
-
                     if (!HoveringEdge.Contains(mouse))
                     {
                         Hovering = null;

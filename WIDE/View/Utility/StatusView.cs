@@ -25,6 +25,7 @@ namespace WIDE.View.Utility
         public StatusView()
         {
             Text = "Status";
+            TabImage = Resources._3d_bar_chart;
 
             statusLabel = new()
             {
@@ -62,7 +63,7 @@ namespace WIDE.View.Utility
 
             timer = new()
             {
-                Interval = 100,
+                Interval = 10,
                 Enabled = true
             };
             timer.Tick += timer_Tick;

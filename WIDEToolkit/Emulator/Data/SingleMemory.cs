@@ -10,6 +10,7 @@ namespace WIDEToolkit.Emulator.Data
     public class SingleMemory : Memory
     {
         protected WORD memory;
+        public WORD RawMemory => memory;
 
         public int WordSize { get; }
         public int Size { get; }

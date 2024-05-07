@@ -48,20 +48,20 @@ namespace WIDE
             assemblerEditor = new();
             assemblerPanel.Controls.Add(assemblerEditor);
 
-            AssemblerEditorInitializer.Init(assemblerEditor);
+            //AssemblerEditorInitializer.Init(assemblerEditor);
 
             memoryEditor = new();
             memoryPanel.Controls.Add(memoryEditor);
 
-            HexEditorInitializer.Init(memoryEditor);
+            //HexEditorInitializer.Init(memoryEditor);
 
             //emu = econt;
 
-            var a = new WArchitecture();
-            a.CreateLive();
-            Emulator e = new(a, new WRawInstructionSet(a));
+            //var a = new WArchitecture();
+            //a.CreateLive();
+            //Emulator e = new(a, new WRawInstructionSet(a));
 
-            emu = new(a) { Emu = e };
+            //emu = new(a) { Emu = e };
         }
 
         private void ProjectForm_Load(object sender, EventArgs e)

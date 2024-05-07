@@ -204,6 +204,30 @@ namespace ToolkitUnitTests.Emulator.Data
         }
 
         [TestMethod]
+        public void Write10()
+        {
+            var src1 = WORD.FromUInt64(0x60, 8);
+            var src2 = WORD.FromUInt64(0xAul, 5);
+            var dest = WORD.FromUInt64(0x6Aul, 8);
+
+            src1.Write(src2, 0);
+
+            Assert.IsTrue(src1 == dest);
+        }
+
+        [TestMethod]
+        public void Write11()
+        {
+            var src1 = WORD.FromUInt64(0xf0, 8);
+            var src2 = WORD.FromUInt64(0x1ul, 8);
+            var dest = WORD.FromUInt64(0x1ul, 8);
+
+            src1.Write(src2, 0);
+
+            Assert.IsTrue(src1 == dest);
+        }
+
+        [TestMethod]
         public void Extend()
         {
             {

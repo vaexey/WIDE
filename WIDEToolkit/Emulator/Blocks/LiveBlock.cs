@@ -16,17 +16,17 @@ namespace WIDEToolkit.Emulator.Blocks
         
         public virtual void ExecuteSignal(Architecture arch, Signal signal)
         {
-            return;
+            throw new FlowException($"Targeted block {GetType()} does not support signals.");
         }
 
         public virtual WORD ReadEndpoint(Endpoint ep, int width)
         {
-            return WORD.Zero(width);
+            throw new FlowException($"Targeted block {GetType()} does not support reading from endpoint.");
         }
 
         public virtual void WriteEndpoint(Endpoint ep, WORD value)
         {
-            return;
+            throw new FlowException($"Targeted block {GetType()} does not support writing to endpoint.");
         }
         public virtual void Commit() { }
     }

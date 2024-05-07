@@ -35,6 +35,9 @@ namespace WIDE.View
 
             public string CPUViewEmpty { get; } = "Architecture does not contain\nany visible block.";
 
+            public string MemoryCannotAdd { get; } = "This view only allows editing memory.\nTo add more bytes to memory consider editing its width in the properties menu.";
+            public string MemoryCannotRemove { get; } = "This view only allows editing memory.\nTo remove bytes from memory consider editing its width in the properties menu.";
+
             public string StatusPaused { get; } = "Status: PAUSED";
             public string StatusUnpaused { get; } = "Status: RUNNING";
             public string CPSLabel { get; } = "CPS: ";

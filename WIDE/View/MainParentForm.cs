@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using WIDE.Controller;
 using WIDE.View.Controls;
 using WIDE.View.CPU;
+using WIDE.View.Editors;
 using WIDE.View.Toolbars;
 using WIDE.View.Utility;
 using WIDEToolkit.Emulator;
@@ -25,6 +26,7 @@ namespace WIDE.View
         public ScriptEngine Commands = new();
 
         CpuView CpuView = new();
+        RawMemoryView RawMemoryView = new();
         PropertiesView PropertiesView = new();
         StatusView StatusView = new();
 
@@ -55,7 +57,7 @@ namespace WIDE.View
             titleMenuStrip.ForeColor = Styles.ColorFont;
             titleMenuStrip.Renderer = new StyledToolStripRenderer();
 
-            toolStrip1.Items.AddRange(new ToolStripItem[]
+            defaultToolStrip.Items.AddRange(new ToolStripItem[]
             {
                 ToolbarItems.Create(CommandEnum.CPU_UNPAUSE),
                 ToolbarItems.Create(CommandEnum.CPU_PAUSE),
@@ -63,7 +65,7 @@ namespace WIDE.View
                 ToolbarItems.Create(CommandEnum.CPU_STEP_INSTRUCTION),
             });
 
-            foreach (var item in toolStrip1.Items)
+            foreach (var item in defaultToolStrip.Items)
             {
                 if(item is CommandToolStripButton ctsb)
                     ctsb.CommandTriggered += delegate(object? s, string st)
@@ -78,10 +80,12 @@ namespace WIDE.View
         private void MainParentForm_Load(object sender, EventArgs e)
         {
             layoutContainer.ViewControls.Add(CpuView);
+            layoutContainer.ViewControls.Add(RawMemoryView);
             layoutContainer.ViewControls.Add(PropertiesView);
             layoutContainer.ViewControls.Add(StatusView);
 
             layoutContainer.SetViewOwner(CpuView, layoutContainer.ChildCenter);
+            layoutContainer.SetViewOwner(RawMemoryView, layoutContainer.ChildLeft);
             layoutContainer.SetViewOwner(PropertiesView, layoutContainer.ChildRight);
             layoutContainer.SetViewOwner(StatusView, layoutContainer.ChildBottom);
 
@@ -96,10 +100,6 @@ namespace WIDE.View
         {
             layoutContainer.SetViewOwner(CpuView, layoutContainer.ChildCenter);
         }
-
-        private void MainParentForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            EContainer.Dispose();
-        }
+        
     }
 }

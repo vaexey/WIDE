@@ -6,13 +6,10 @@ using System.Threading.Tasks;
 
 namespace WIDE.Controller
 {
-    public class ScriptException : Exception
+    public class ScriptException : UserFriendlyException
     {
-        public bool Error { get; }
-
-        public ScriptException(string? message = null, bool error = false) : base(message) 
-        {
-            Error = error;
-        }
+        // TODO: translate title
+        public ScriptException(string? message = null, bool error = false) : base(message, "Scripts", error)
+        { }
     }
 }

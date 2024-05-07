@@ -16,6 +16,7 @@
             if (disposing && (components != null))
             {
                 components.Dispose();
+                EContainer.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -31,16 +32,12 @@
             components = new System.ComponentModel.Container();
             layoutContainer = new Layout.LayoutContainer();
             ToolTipControl = new ToolTip(components);
-            pictureBox1 = new PictureBox();
-            label3 = new Label();
-            label2 = new Label();
-            label1 = new Label();
             titleMenuStrip = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
             viewMenuStripItem = new ToolStripMenuItem();
             cpuStripMenuItem = new ToolStripMenuItem();
-            toolStrip1 = new ToolStrip();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            defaultToolStrip = new ToolStrip();
+            logoControl = new Controls.LogoControl();
             titleMenuStrip.SuspendLayout();
             SuspendLayout();
             // 
@@ -53,50 +50,6 @@
             layoutContainer.Size = new Size(1050, 413);
             layoutContainer.TabIndex = 0;
             layoutContainer.Text = "layoutContainer1";
-            // 
-            // pictureBox1
-            // 
-            pictureBox1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            pictureBox1.Image = Resources.WIDE_logo;
-            pictureBox1.Location = new Point(976, 0);
-            pictureBox1.Margin = new Padding(0);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(74, 74);
-            pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
-            pictureBox1.TabIndex = 8;
-            pictureBox1.TabStop = false;
-            // 
-            // label3
-            // 
-            label3.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            label3.Location = new Point(547, 29);
-            label3.Name = "label3";
-            label3.Size = new Size(331, 20);
-            label3.TabIndex = 7;
-            label3.Text = "W-machine Integrated Development Environment";
-            label3.TextAlign = ContentAlignment.TopRight;
-            // 
-            // label2
-            // 
-            label2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            label2.AutoSize = true;
-            label2.Font = new Font("Courier New", 11.25F, FontStyle.Bold);
-            label2.Location = new Point(895, 49);
-            label2.Name = "label2";
-            label2.Size = new Size(80, 17);
-            label2.TabIndex = 6;
-            label2.Text = "v. 0.1.0";
-            // 
-            // label1
-            // 
-            label1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            label1.AutoSize = true;
-            label1.Font = new Font("Courier New", 27.75F, FontStyle.Bold);
-            label1.Location = new Point(877, 16);
-            label1.Name = "label1";
-            label1.Size = new Size(106, 41);
-            label1.TabIndex = 5;
-            label1.Text = "WIDE";
             // 
             // titleMenuStrip
             // 
@@ -130,55 +83,54 @@
             cpuStripMenuItem.Text = "CPU";
             cpuStripMenuItem.Click += cpuStripMenuItem_Click;
             // 
-            // toolStrip1
+            // defaultToolStrip
             // 
-            toolStrip1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            toolStrip1.AutoSize = false;
-            toolStrip1.BackColor = Color.FromArgb(64, 64, 64);
-            toolStrip1.Dock = DockStyle.None;
-            toolStrip1.Location = new Point(9, 41);
-            toolStrip1.Name = "toolStrip1";
-            toolStrip1.Size = new Size(582, 25);
-            toolStrip1.TabIndex = 10;
-            toolStrip1.Text = "toolStrip1";
+            defaultToolStrip.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            defaultToolStrip.AutoSize = false;
+            defaultToolStrip.BackColor = Color.FromArgb(64, 64, 64);
+            defaultToolStrip.Dock = DockStyle.None;
+            defaultToolStrip.Location = new Point(9, 41);
+            defaultToolStrip.Name = "defaultToolStrip";
+            defaultToolStrip.Size = new Size(866, 25);
+            defaultToolStrip.TabIndex = 10;
+            defaultToolStrip.Text = "toolStrip1";
+            // 
+            // logoControl
+            // 
+            logoControl.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            logoControl.Location = new Point(556, 0);
+            logoControl.Name = "logoControl";
+            logoControl.Size = new Size(494, 74);
+            logoControl.TabIndex = 11;
             // 
             // MainParentForm
             // 
             AutoScaleMode = AutoScaleMode.None;
             ClientSize = new Size(1050, 487);
-            Controls.Add(toolStrip1);
-            Controls.Add(pictureBox1);
-            Controls.Add(label3);
-            Controls.Add(label2);
-            Controls.Add(label1);
+            Controls.Add(defaultToolStrip);
             Controls.Add(layoutContainer);
             Controls.Add(titleMenuStrip);
+            Controls.Add(logoControl);
             DoubleBuffered = true;
             MainMenuStrip = titleMenuStrip;
             MinimumSize = new Size(640, 480);
             Name = "MainParentForm";
             Text = "MainParentForm";
-            FormClosing += MainParentForm_FormClosing;
             Load += MainParentForm_Load;
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             titleMenuStrip.ResumeLayout(false);
             titleMenuStrip.PerformLayout();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
 
         private Layout.LayoutContainer layoutContainer;
         public ToolTip ToolTipControl;
-        private PictureBox pictureBox1;
-        private Label label3;
-        private Label label2;
-        private Label label1;
         private MenuStrip titleMenuStrip;
         private ToolStripMenuItem viewMenuStripItem;
         private ToolStripMenuItem cpuStripMenuItem;
         private ToolStripMenuItem fileToolStripMenuItem;
-        private ToolStrip toolStrip1;
+        private ToolStrip defaultToolStrip;
+        private Controls.LogoControl logoControl;
     }
 }

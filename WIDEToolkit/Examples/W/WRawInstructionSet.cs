@@ -53,5 +53,19 @@ namespace WIDEToolkit.Examples.W
                     })
             };
         }
+
+        public WORD Build(string instr, int arg)
+        {
+            var opcode = Instructions.Where(i => i.Name == instr).First().OpCode.Slice(0, 3);
+
+            var bin = WORD.Zero(8);
+
+            var warg = WORD.FromUInt64((ulong)arg, 5);
+
+            bin.Write(opcode, 5);
+            bin.Write(warg, 0);
+
+            return bin;
+        }
     }
 }

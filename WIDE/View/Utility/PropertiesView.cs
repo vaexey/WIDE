@@ -15,6 +15,8 @@ namespace WIDE.View.Utility
         public PropertiesView()
         {
             Text = "Properties";
+            TabImage = Resources.Tune;
+
             Grid = new()
             {
                 Dock = DockStyle.Fill,

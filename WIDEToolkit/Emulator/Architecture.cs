@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using WIDEToolkit.Emulator.Blocks;
+using WIDEToolkit.Emulator.Blocks.MemBlock;
 using WIDEToolkit.Emulator.Blocks.Register;
 using WIDEToolkit.Emulator.Data;
 using WIDEToolkit.Emulator.Flow;
@@ -15,11 +16,10 @@ namespace WIDEToolkit.Emulator
 {
     public class Architecture
     {
+        public bool IsLive { get; protected set; } = false;
+
         protected List<ArchBlock> blocks = new();
         public ReadOnlyCollection<ArchBlock> Blocks => blocks.AsReadOnly();
-
-        //public IEnumerable<Register> Registers =>
-        //    blocks.Where(x => x.GetType().IsAssignableTo(typeof(Register))).Select(x => (Register)x);
 
         protected List<Signal> signals = new();
         public ReadOnlyCollection<Signal> Signals => signals.AsReadOnly();
@@ -30,18 +30,21 @@ namespace WIDEToolkit.Emulator
         public string InstructionEndpoint = "";
 
         public int AddressWidth { get; } = 8;
-        protected ConstProviderBlock constProvider = new();
 
         protected List<Signal> commitedSignals = new();
         protected List<Signal> currentSignals = new();
         public ReadOnlyCollection<Signal> CommitedSignals => commitedSignals.AsReadOnly();
 
+        public MemBlock MemoryBlock => memBlock;
+        protected MemBlock memBlock { get; } = new();
+        protected ConstProviderBlock constProvider { get; } = new();
         protected DebugBlock debug { get; } = new();
 
         public Architecture()
         {
             AddBlock(constProvider);
             AddBlock(debug);
+            AddBlock(memBlock);
         }
 
         public void AddBlock(ArchBlock b)
@@ -51,6 +54,7 @@ namespace WIDEToolkit.Emulator
 
         public void Clean()
         {
+            IsLive = false;
             signals.Clear();
             endpoints.Clear();
 
@@ -72,6 +76,38 @@ namespace WIDEToolkit.Emulator
                 {
                     signals.AddRange(l.Signals);
                     endpoints.AddRange(l.Endpoints);
+                }
+            }
+
+            if(memBlock.Live is LiveMemBlock lmb)
+                AttachMemoryDivisions(lmb.Divisions, true);
+
+            IsLive = true;
+        }
+
+        protected void AttachMemoryDivisions(List<Memory> mems, bool throwOnNotFound = true)
+        {
+            var map = new Dictionary<string, Memory>();
+
+            foreach (var m in mems)
+                if(m.DivisionName is not null)
+                    map[m.DivisionName] = m;
+
+            foreach(var b in blocks)
+            {
+                if(b.GetLive() is IMemoryAttachable ima)
+                {
+                    var divName = ima.GetDivisionName();
+
+                    if(!map.ContainsKey(divName))
+                    {
+                        if(throwOnNotFound)
+                            throw new FlowException($"Could not attach memory {divName} to {b}, because it was not found.");
+
+                        continue;
+                    }
+
+                    ima.AttachMemory(map[divName]);
                 }
             }
         }

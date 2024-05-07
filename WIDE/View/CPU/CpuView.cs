@@ -27,12 +27,13 @@ namespace WIDE.View.CPU
         public CpuView() : base()
         {
             Text = "CPU";
+            TabImage = Resources.Computer_16x16;
             
             AutoScroll = true;
 
             timer = new()
             {
-                Interval = 100,
+                Interval = 10,
                 Enabled = true
             };
             timer.Tick += timer_Tick;

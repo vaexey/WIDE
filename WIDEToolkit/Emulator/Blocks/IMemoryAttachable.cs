@@ -5,10 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using WIDEToolkit.Emulator.Data;
 
-namespace WIDEToolkit.Emulator.Flow
+namespace WIDEToolkit.Emulator.Blocks
 {
-    public class MemoryException : EmulatorException
+    public interface IMemoryAttachable
     {
-        public MemoryException(string message) : base(message) { }
+        public string GetDivisionName();
+        public void AttachMemory(Memory memory);
     }
 }
