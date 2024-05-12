@@ -16,12 +16,7 @@ namespace WIDEToolkit.Examples.W
         {
             Instructions = new()
             {
-                AsmInstruction.Create("STP", WORD.FromUInt64(0ul, 3))
-                    .WithImplementation()
-                    .Operand(new StringOperand("STP"))
-                    .Fragment(new ConstFragment(WORD.FromUInt64(0, 5)))
-                    .Fragment(new OpcodeFragment())
-                    .Parent,
+                Make0Arg("STP", 0ul),
 
                 Make1Arg("DOD", 1ul),
                 Make1Arg("ODE", 2ul),
@@ -29,7 +24,19 @@ namespace WIDEToolkit.Examples.W
                 Make1Arg("LAD", 4ul),
                 Make1Arg("SOB", 5ul),
 
+                Make1Arg("RST", 0ul),
+                Make0Arg("RPA", 0ul),
             };
+        }
+
+        private AsmInstruction Make0Arg(string name, ulong opcode)
+        {
+            return AsmInstruction.Create(name, WORD.FromUInt64(opcode, 3))
+                .WithImplementation()
+                .Operand(new StringOperand(name))
+                .Fragment(new ConstFragment(WORD.FromUInt64(0, 5)))
+                .Fragment(new OpcodeFragment())
+                .Parent;
         }
 
         private AsmInstruction Make1Arg(string name, ulong opcode)
@@ -37,7 +44,7 @@ namespace WIDEToolkit.Examples.W
             return AsmInstruction.Create(name, WORD.FromUInt64(opcode, 3))
                 .WithImplementation()
                 .Operand(new StringOperand(name))
-                .Operand(new IntOperand())
+                .Operand(new ValueOperand())
                 .Fragment(new ParamFragment(0, 5))
                 .Fragment(new OpcodeFragment())
                 .Parent;

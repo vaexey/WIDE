@@ -35,16 +35,18 @@ namespace WIDEToolkit.Assembler.Assembly
                     return null;
                 }
 
-                var param = operand.GenerateParams(symbol);
+                aii.Origin.Add(symbol);
+                //var param = operand.GenerateParams(symbol);
 
-                if (param.Length > 0)
-                    aii.Params.AddRange(param);
+                //if (param.Length > 0)
+                //    aii.Params.AddRange(param);
             }
 
             aii.Width = Fragments.Select(f => f.CalculateWidth(aii)).Sum();
 
             return aii;
         }
+        
         public AsmInstructionImplementation WithImplementation()
         {
             return Parent.WithImplementation();

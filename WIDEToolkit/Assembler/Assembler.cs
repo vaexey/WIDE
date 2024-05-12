@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WIDEToolkit.Assembler.Assembly;
+using WIDEToolkit.Assembler.Assembly.Fragment;
 using WIDEToolkit.Assembler.Assembly.Symbol;
 using WIDEToolkit.Assembler.Parsing;
 using WIDEToolkit.Data.Binary;
@@ -15,7 +16,7 @@ namespace WIDEToolkit.Assembler
     {
         public AsmInstructionSet Set { get; set; } = new();
 
-        public int AddressWidth { get; set; } = 5;
+        public int WordWidth { get; set; } = 8;
 
         public WORD Assemble(string listing)
         {
@@ -42,15 +43,22 @@ namespace WIDEToolkit.Assembler
             {
                 var symbols = symbolsIter;
 
-                string? newLabelName = null;
+                if (symbols.Count == 0)
+                    continue;
 
-                if(symbols.Count > 0 &&
-                    symbols[0] is NewLabelSymbol nls)
+                if(symbols[0] is NewLabelSymbol nls)
                 {
                     symbols = symbolsIter.ToList();
                     symbols.RemoveAt(0);
 
-                    newLabelName = nls.Name;
+                    if (nls.Name != null)
+                        labelTable[nls.Name] =
+                            WORD.FromUInt64(
+                                (ulong)(index / WordWidth)
+                            );
+
+                    if (symbols.Count == 0)
+                        continue;
                 }
 
                 var impl = Set.ParseInstruction(symbols);
@@ -60,10 +68,10 @@ namespace WIDEToolkit.Assembler
 
                 impl.Offset = index;
 
-                if (newLabelName != null)
-                    labelTable[newLabelName] = WORD.FromUInt64(unchecked((ulong)impl.Offset), AddressWidth);
-
                 index += impl.Width;
+
+                if (impl.Width % WordWidth != 0)
+                    throw new AssemblerException($"Instruction {impl.Parent.Parent.Name} has invalid word width of {impl.Width}");
 
                 impls.Add(impl);
             }
@@ -71,15 +79,17 @@ namespace WIDEToolkit.Assembler
             //2nd pass
             foreach(var impl in impls)
             {
-                for(int i = 0; i < impl.Params.Count; i++)
+                for(int i = 0; i < impl.Origin.Count; i++)
                 {
-                    var param = impl.Params[i];
+                    var orig = impl.Origin[i];
 
-                    if(param is ITranslatableAsmSymbol tas)
+                    if (orig is ITranslatableAsmSymbol tas)
                     {
-                        impl.Params[i] = tas.Translate(labelTable);
+                        tas.ProvideTable(labelTable);
                     }
                 }
+
+                impl.GenerateParams();
             }
 
             return impls;

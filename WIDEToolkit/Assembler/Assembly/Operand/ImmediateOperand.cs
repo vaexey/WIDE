@@ -7,7 +7,7 @@ using WIDEToolkit.Assembler.Assembly.Symbol;
 
 namespace WIDEToolkit.Assembler.Assembly.Operand
 {
-    public class IntOperand : AsmInstructionOperand<ImmediateSymbol>
+    public class ImmediateOperand : AsmInstructionOperand<ImmediateSymbol>
     {
         public override IAsmSymbol[] GenerateParams(IAsmSymbol source)
         {

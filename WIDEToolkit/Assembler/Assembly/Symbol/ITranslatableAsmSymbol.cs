@@ -9,7 +9,8 @@ namespace WIDEToolkit.Assembler.Assembly.Symbol
 {
     public interface ITranslatableAsmSymbol : IAsmSymbol
     {
-        public IReadableAsmSymbol Translate(Dictionary<string, WORD> labelTable);
+        public void ProvideTable(Dictionary<string, WORD> labelTable);
+        public IReadableAsmSymbol Translate();
 
         public int CalculateWidth(AsmImplementedInstruction impl);
     }

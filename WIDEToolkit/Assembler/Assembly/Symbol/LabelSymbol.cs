@@ -12,12 +12,19 @@ namespace WIDEToolkit.Assembler.Assembly.Symbol
     {
         public string Name { get; set; }
 
+        private Dictionary<string, WORD> labelTable = new();
+
         public LabelSymbol(string name)
         {
             Name = name;
         }
 
-        public IReadableAsmSymbol Translate(Dictionary<string, WORD> labelTable)
+        public void ProvideTable(Dictionary<string, WORD> labelTable)
+        {
+            this.labelTable = labelTable;
+        }
+
+        public IReadableAsmSymbol Translate()
         {
             if (!labelTable.ContainsKey(Name))
                 throw new AssemblerException($"Could not find \"{Name}\" label definition");

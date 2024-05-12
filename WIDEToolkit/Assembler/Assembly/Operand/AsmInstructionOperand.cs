@@ -10,20 +10,13 @@ namespace WIDEToolkit.Assembler.Assembly.Operand
 {
     public abstract class AsmInstructionOperand
     {
-        public abstract Type Expected { get; }
-
         public virtual IAsmSymbol[] GenerateParams(IAsmSymbol source) => Array.Empty<IAsmSymbol>();
 
-        public virtual bool Match(IAsmSymbol symbol)
-        {
-            return symbol.GetType().IsAssignableTo(Expected);
-        }
+        public abstract bool Match(IAsmSymbol symbol);
     }
 
     public abstract class AsmInstructionOperand<T> : AsmInstructionOperand where T : IAsmSymbol
     {
-        public override Type Expected => typeof(T);
-
         public virtual bool Match(T symbol)
         {
             return true;
@@ -32,7 +25,7 @@ namespace WIDEToolkit.Assembler.Assembly.Operand
         public override bool Match(IAsmSymbol symbol)
         {
             return 
-                base.Match(symbol) &&
+                symbol.GetType().IsAssignableTo(typeof(T)) &&
                 Match((T) symbol);
         }
     }

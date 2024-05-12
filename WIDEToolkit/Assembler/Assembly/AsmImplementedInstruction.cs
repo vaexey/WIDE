@@ -11,6 +11,8 @@ namespace WIDEToolkit.Assembler.Assembly
     public class AsmImplementedInstruction
     {
         public AsmInstructionImplementation Parent { get; set; }
+
+        public List<IAsmSymbol> Origin { get; set; } = new();
         public List<IAsmSymbol> Params { get; set; } = new();
 
         public int Offset { get; set; } = 0;
@@ -19,6 +21,16 @@ namespace WIDEToolkit.Assembler.Assembly
         public AsmImplementedInstruction(AsmInstructionImplementation parent)
         {
             Parent = parent;
+        }
+
+        public void GenerateParams()
+        {
+            for (int i = 0; i < Origin.Count; i++)
+            {
+                var param = Parent.Operands[i].GenerateParams(Origin[i]);
+
+                Params.AddRange(param);
+            }
         }
 
         public WORD Build()
