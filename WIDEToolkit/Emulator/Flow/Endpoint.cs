@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WIDEToolkit.Data.Binary;
 using WIDEToolkit.Emulator.Blocks;
-using WIDEToolkit.Emulator.Data;
 
 namespace WIDEToolkit.Emulator.Flow
 {

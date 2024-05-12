@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WIDEToolkit.Data.Binary;
 using WIDEToolkit.Emulator;
 using WIDEToolkit.Emulator.Blocks.Register;
-using WIDEToolkit.Emulator.Data;
 using WIDEToolkit.Emulator.Flow;
 using static WIDEToolkit.Emulator.Blocks.Register.LiveRegister;
 

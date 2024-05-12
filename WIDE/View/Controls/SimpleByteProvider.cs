@@ -10,6 +10,7 @@ namespace WIDE.View.Controls
 {
     public class SimpleByteProvider : IByteProvider
     {
+        // TODO: prepare for memory object
         private bool _hasChanges;
 
         public List<byte> Bytes;

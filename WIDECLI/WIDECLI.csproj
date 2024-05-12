@@ -11,4 +11,8 @@
     <ProjectReference Include="..\WIDEToolkit\WIDEToolkit.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="SimpleAssembler\" />
+  </ItemGroup>
+
 </Project>

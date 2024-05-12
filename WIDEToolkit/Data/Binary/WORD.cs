@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WIDEToolkit.Emulator.Data
+namespace WIDEToolkit.Data.Binary
 {
     /// <summary>
     /// A wrapper for byte[] that allows direct bit manipulation
@@ -38,7 +38,7 @@ namespace WIDEToolkit.Emulator.Data
 
             while (--idx > -1)
             {
-                val = (val << 8) | _bytes[idx];
+                val = val << 8 | _bytes[idx];
             }
 
             return val;
@@ -63,7 +63,7 @@ namespace WIDEToolkit.Emulator.Data
             for (; i < o.Length; i++)
             {
                 o[i] = (byte)(
-                    (_bytes[offset + i] >> lb)
+                    _bytes[offset + i] >> lb
                 );
             }
 
@@ -130,13 +130,13 @@ namespace WIDEToolkit.Emulator.Data
                 for (int i = 0; i < arr.Length - 1; i++)
                     arr[i] = 255;
 
-                arr[arr.Length - 1] = (byte)(255 >> (8 - width % 8));
+                arr[arr.Length - 1] = (byte)(255 >> 8 - width % 8);
             }
             else
             {
                 arr = new byte[ceil / 8];
 
-                for(int i = 0; i < arr.Length; i++)
+                for (int i = 0; i < arr.Length; i++)
                     arr[i] = 255;
             }
 
@@ -145,7 +145,7 @@ namespace WIDEToolkit.Emulator.Data
 
         public void Write(WORD w, int start)
         {
-            if(w.Width > Width - start)
+            if (w.Width > Width - start)
             {
                 w = w.Slice(0, Width - start + 1);
             }
@@ -154,14 +154,14 @@ namespace WIDEToolkit.Emulator.Data
             int idx2 = (start + w._width - 1) / 8;
 
             int woff = start % 8;
-            int wmask = (0xff << woff) & 0xff;
+            int wmask = 0xff << woff & 0xff;
 
             if (idx1 == idx2)
-                wmask &= (0xff >> (8 - woff - w._width)) & 0xff;
+                wmask &= 0xff >> 8 - woff - w._width & 0xff;
 
             _bytes[idx1] = (byte)(
-                (_bytes[idx1] & ~wmask) |
-                ((w._bytes[0] << woff) & wmask)
+                _bytes[idx1] & ~wmask |
+                w._bytes[0] << woff & wmask
              );
 
             if (idx1 == idx2)
@@ -176,8 +176,8 @@ namespace WIDEToolkit.Emulator.Data
                 int widx = bit / 8;
 
                 _bytes[i] = (byte)(
-                    (w._bytes[widx] >> (8-woff)) |
-                    (w._bytes[widx + 1] << woff)
+                    w._bytes[widx] >> 8 - woff |
+                    w._bytes[widx + 1] << woff
                 );
             }
 
@@ -191,17 +191,17 @@ namespace WIDEToolkit.Emulator.Data
             if (eidx + 1 == w._bytes.Length)
             {
                 _bytes[idx2] = (byte)(
-                    (w._bytes[eidx] >> ((8 - woff) % 8)) |
-                    (_bytes[idx2] & ~emask)
+                    w._bytes[eidx] >> (8 - woff) % 8 |
+                    _bytes[idx2] & ~emask
                 );
 
                 return;
             }
 
             _bytes[idx2] = (byte)(
-                (w._bytes[eidx] >> (8-woff)) |
-                ((w._bytes[eidx + 1] << woff) & emask) |
-                (_bytes[idx2] & ~emask)
+                w._bytes[eidx] >> 8 - woff |
+                w._bytes[eidx + 1] << woff & emask |
+                _bytes[idx2] & ~emask
             );
         }
 
@@ -250,7 +250,7 @@ namespace WIDEToolkit.Emulator.Data
 
         public void Subtract(WORD value)
         {
-            if(value.Width == _width)
+            if (value.Width == _width)
             {
                 //2s compliment inversion
                 var twocpl = value.Clone();
@@ -268,7 +268,7 @@ namespace WIDEToolkit.Emulator.Data
 
         public void Invert()
         {
-            for(int i = 0; i < _bytes.Length; i++)
+            for (int i = 0; i < _bytes.Length; i++)
             {
                 _bytes[i] = (byte)~_bytes[i];
             }
@@ -277,7 +277,7 @@ namespace WIDEToolkit.Emulator.Data
             if (mod != 0)
             {
                 int i = _bytes.Length - 1;
-                _bytes[i] = (byte)(_bytes[i] & (0xff >> (8 - mod)));
+                _bytes[i] = (byte)(_bytes[i] & 0xff >> 8 - mod);
             }
         }
 
@@ -286,9 +286,9 @@ namespace WIDEToolkit.Emulator.Data
             if (obj == null)
                 return false;
 
-            if(obj is WORD w)
+            if (obj is WORD w)
             {
-                if(_width != w._width)
+                if (_width != w._width)
                     return false;
 
                 for (int i = 0; i < _bytes.Length; i++)
@@ -310,10 +310,11 @@ namespace WIDEToolkit.Emulator.Data
         {
             int width = 0;
 
-            if(radix == 16)
+            if (radix == 16)
             {
                 width = 2;
-            } else if(radix == 2)
+            }
+            else if (radix == 2)
             {
                 width = 8;
             }

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WIDEToolkit.Emulator.Flow;
 
-namespace WIDEToolkit.Emulator.Data
+namespace WIDEToolkit.Data.Binary
 {
     public class SingleMemory : Memory
     {
@@ -41,7 +41,7 @@ namespace WIDEToolkit.Emulator.Data
 
             int bitwise = address * WordSize;
 
-            if(value.Width == WordSize)
+            if (value.Width == WordSize)
             {
                 memory.Write(value, bitwise);
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ScintillaNET;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -20,6 +21,7 @@ namespace WIDE.View.CPU
 
         private System.Windows.Forms.Timer timer;
         private Label centerLabel;
+        private ComboBox blockCombo;
 
         List<CpuElementControl> cpuElementControls = new();
         public ArchBlock? SelectedCpuBlock = null;
@@ -46,6 +48,18 @@ namespace WIDE.View.CPU
                 TextAlign = ContentAlignment.MiddleCenter,
             };
             Controls.Add(centerLabel);
+
+            blockCombo = new()
+            {
+                Dock = DockStyle.Top,
+                DropDownStyle = ComboBoxStyle.DropDownList
+            };
+            // TODO: translate
+            blockCombo.Items.Add("Architecture container");
+            blockCombo.SelectedIndex = 0;
+            Controls.Add(blockCombo);
+
+            blockCombo.SelectedIndexChanged += blockCombo_SelectedIndexChanged;
 
             HandleCreated += cpuView_Handle;
             Click += cpuView_Click;
@@ -91,12 +105,30 @@ namespace WIDE.View.CPU
             }
         }
 
+        private void blockCombo_SelectedIndexChanged(object? sender, EventArgs e)
+        {
+            var b = blockCombo.SelectedIndex < 1 ? null : MainForm.EContainer.Arch.Blocks[blockCombo.SelectedIndex - 1];
+
+            SelectBlock(b);
+        }
+
         private void cpuProperties_PropertyValueChanged(object? s, PropertyValueChangedEventArgs e)
         {
             if (e.ChangedItem is GridItem gi
-                && gi.GetType().GetProperty("Instance") is PropertyInfo prop
-                && prop.GetValue(gi) is BlockMetadata bm)
+                && gi.GetType().GetProperty("Instance") is PropertyInfo propInstance
+                && propInstance.GetValue(gi) is BlockMetadata bm
+                && gi.GetType().GetProperty("PropertyName") is PropertyInfo propName
+                && propName.GetValue(gi) is string name)
             {
+                if (name == "Hidden")
+                {
+                    if((bool?)e.OldValue != bm.Hidden)
+                    {
+                        DrawArch();
+                        return;
+                    }
+                }
+
                 foreach (var cec in cpuElementControls.Where(x => x.Block == SelectedCpuBlock))
                 {
                     cec.UpdatePosition();
@@ -116,10 +148,13 @@ namespace WIDE.View.CPU
                 if(MainForm.EContainer is not null)
                     propertyGrid.SelectedObject = MainForm.EContainer.Arch;
 
+                blockCombo.SelectedIndex = 0;
+
                 return;
             }
 
             propertyGrid.SelectedObject = b;
+            blockCombo.SelectedIndex = MainForm.EContainer.Arch.Blocks.IndexOf(SelectedCpuBlock) + 1;
         }
 
         public void DrawArch()
@@ -128,6 +163,9 @@ namespace WIDE.View.CPU
                 Controls.Remove(cpb);
 
             cpuElementControls.Clear();
+            blockCombo.Items.Clear();
+            // TODO: translate
+            blockCombo.Items.Add("Architecture container");
             
             if(!MainForm.EContainer.Arch.Blocks.Where(b => !b.Meta.Hidden).Any())
             {
@@ -142,6 +180,12 @@ namespace WIDE.View.CPU
             {
                 var meta = b.Meta;
 
+                // TODO: translate
+                blockCombo.Items.Add(
+                    (meta.Hidden ? "Hidden: " : "") + 
+                    $"{meta.Title} ({b.GetType().Name})"
+                );
+
                 if (meta.Hidden)
                     continue;
 
@@ -155,11 +199,8 @@ namespace WIDE.View.CPU
                 cpb.Click += cpuView_element_Click;
                 cpb.MetaPositionChanged += cpuView_meta_changed;
             }
-        }
 
-        public void Command_ResetEmulator()
-        {
-            
+            blockCombo.SelectedIndex = MainForm.EContainer.Arch.Blocks.IndexOf(SelectedCpuBlock) + 1;
         }
     }
 }

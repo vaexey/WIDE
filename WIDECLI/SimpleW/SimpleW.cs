@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WIDEToolkit.Data.Binary;
 using WIDEToolkit.Emulator;
-using WIDEToolkit.Emulator.Assembly;
 using WIDEToolkit.Emulator.Blocks.ALU;
 using WIDEToolkit.Emulator.Blocks.MemHandler;
 using WIDEToolkit.Emulator.Blocks.Register;
-using WIDEToolkit.Emulator.Data;
 using WIDEToolkit.Examples.W;
 
 namespace WIDECLI.simpleW

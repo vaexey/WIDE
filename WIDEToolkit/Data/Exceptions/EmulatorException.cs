@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WIDEToolkit.Emulator.Data
+namespace WIDEToolkit.Data.Exceptions
 {
     public class EmulatorException : Exception
     {

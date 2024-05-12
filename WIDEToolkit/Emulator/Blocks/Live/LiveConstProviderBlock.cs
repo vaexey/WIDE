@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WIDEToolkit.Emulator.Data;
+using WIDEToolkit.Data;
+using WIDEToolkit.Data.Exceptions;
+using WIDEToolkit.Data.Binary;
 using WIDEToolkit.Emulator.Flow;
 
 namespace WIDEToolkit.Emulator.Blocks.Live

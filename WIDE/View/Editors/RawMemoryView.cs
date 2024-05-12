@@ -1,12 +1,13 @@
 ﻿using Be.Windows.Forms;
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WIDE.View.Controls;
 using WIDE.View.Layout;
-using WIDEToolkit.Emulator.Data;
+using WIDEToolkit.Data.Binary;
 using Timer = System.Windows.Forms.Timer;
 
 namespace WIDE.View.Editors
@@ -20,6 +21,7 @@ namespace WIDE.View.Editors
 
         public RawMemoryView()
         {
+            // TODO: translate
             Text = "Memory (hex)";
             TabImage = Resources.Database;
 
@@ -93,6 +95,15 @@ namespace WIDE.View.Editors
                     memoryProvider.OnLengthChanged();
                 }
 
+                memoryProvider.OnChanged();
+
+                hexEditor.Invalidate();
+            }
+            else
+            {
+                memoryProvider.Bytes.Clear();
+
+                memoryProvider.OnLengthChanged();
                 memoryProvider.OnChanged();
 
                 hexEditor.Invalidate();

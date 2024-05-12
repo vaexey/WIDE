@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WIDEToolkit.Data;
+using WIDEToolkit.Data.Exceptions;
 using WIDEToolkit.Emulator.Assembly;
-using WIDEToolkit.Emulator.Data;
 
 namespace WIDEToolkit.Emulator
 {

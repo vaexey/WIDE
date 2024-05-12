@@ -6,10 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using WIDEToolkit.Data.Exceptions;
+using WIDEToolkit.Data.Binary;
 using WIDEToolkit.Emulator.Blocks;
 using WIDEToolkit.Emulator.Blocks.MemBlock;
 using WIDEToolkit.Emulator.Blocks.Register;
-using WIDEToolkit.Emulator.Data;
 using WIDEToolkit.Emulator.Flow;
 
 namespace WIDEToolkit.Emulator

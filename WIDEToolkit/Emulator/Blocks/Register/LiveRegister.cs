@@ -4,8 +4,10 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WIDEToolkit.Emulator.Data;
+using WIDEToolkit.Data;
+using WIDEToolkit.Data.Binary;
 using WIDEToolkit.Emulator.Flow;
+using WIDEToolkit.Data.Exceptions;
 
 namespace WIDEToolkit.Emulator.Blocks.Register
 {

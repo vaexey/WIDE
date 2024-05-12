@@ -39,6 +39,11 @@ namespace WIDE.View.Layout
                 ChildCenter
             });
 
+            ChildBottom.Dock = DockStyle.Bottom;
+            ChildLeft.Dock = DockStyle.Left;
+            ChildRight.Dock = DockStyle.Right;
+            ChildCenter.Dock = DockStyle.None;
+
             foreach (var child in LayoutChildren)
             {
                 child.Content.ImageList = childrenImageList;
@@ -56,8 +61,6 @@ namespace WIDE.View.Layout
             Resize += Child_Resized;
 
             ViewControls.CollectionChanged += ViewControls_CollectionChanged;
-
-            ChildrenLayout();
         }
 
         private void ViewControls_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -94,20 +97,20 @@ namespace WIDE.View.Layout
         //        lv.MouseMove -= Child_MouseMove;
         //}
 
-        protected void ChildrenLayout()
-        {
-            //ChildBottom.Size = new Size(100, 100);
-            //ChildLeft.Size = new Size(100, 100);
-            //ChildRight.Size = new Size(100, 100);
-            //ChildCenter.Size = new Size(100, 100);
+        //protected void ChildrenLayout()
+        //{
+        //    //ChildBottom.Size = new Size(100, 100);
+        //    //ChildLeft.Size = new Size(100, 100);
+        //    //ChildRight.Size = new Size(100, 100);
+        //    //ChildCenter.Size = new Size(100, 100);
 
-            ChildBottom.Dock = DockStyle.Bottom;
-            ChildLeft.Dock = DockStyle.Left;
-            ChildRight.Dock = DockStyle.Right;
-            ChildCenter.Dock = DockStyle.None;
+        //    ChildBottom.Dock = DockStyle.Bottom;
+        //    ChildLeft.Dock = DockStyle.Left;
+        //    ChildRight.Dock = DockStyle.Right;
+        //    ChildCenter.Dock = DockStyle.None;
 
-            //ChildCenter.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-        }
+        //    //ChildCenter.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+        //}
 
         protected void Child_Resized(object? sender, EventArgs e)
         {

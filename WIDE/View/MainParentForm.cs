@@ -27,8 +27,11 @@ namespace WIDE.View
 
         CpuView CpuView = new();
         RawMemoryView RawMemoryView = new();
+        SimpleMemoryView SimpleMemoryView = new();
         PropertiesView PropertiesView = new();
         StatusView StatusView = new();
+
+        AsmEditor AsmEditor = new();
 
         public EventHandler LayoutReady = delegate { };
 
@@ -81,13 +84,19 @@ namespace WIDE.View
         {
             layoutContainer.ViewControls.Add(CpuView);
             layoutContainer.ViewControls.Add(RawMemoryView);
+            layoutContainer.ViewControls.Add(SimpleMemoryView);
             layoutContainer.ViewControls.Add(PropertiesView);
             layoutContainer.ViewControls.Add(StatusView);
 
             layoutContainer.SetViewOwner(CpuView, layoutContainer.ChildCenter);
+            //layoutContainer.SetViewOwner(SimpleMemoryView, layoutContainer.ChildCenter);
             layoutContainer.SetViewOwner(RawMemoryView, layoutContainer.ChildLeft);
+            layoutContainer.SetViewOwner(SimpleMemoryView, layoutContainer.ChildLeft);
             layoutContainer.SetViewOwner(PropertiesView, layoutContainer.ChildRight);
             layoutContainer.SetViewOwner(StatusView, layoutContainer.ChildBottom);
+
+            layoutContainer.ViewControls.Add(AsmEditor);
+            layoutContainer.SetViewOwner(AsmEditor, layoutContainer.ChildCenter);
 
             LayoutReady(this, EventArgs.Empty);
 

@@ -10,6 +10,8 @@ namespace WIDE.View.Layout
 {
     public class LayoutView : YaTabPage
     {
+        private bool onMainFormReadyFired = false;
+
         protected MainParentForm MainForm => (MainParentForm)ParentForm;
 
         protected Image? tabImage;
@@ -58,8 +60,31 @@ namespace WIDE.View.Layout
         {
             base.OnCreateControl();
 
+            //OnMainFormReady();
+        }
+
+        protected override void OnHandleCreated(EventArgs e)
+        {
+            base.OnHandleCreated(e);
+
+            //OnMainFormReady();
+        }
+
+        protected override void OnParentChanged(EventArgs e)
+        {
+            base.OnParentChanged(e);
+
+            OnMainFormReady();
+        }
+
+        protected void OnMainFormReady()
+        {
             if (TabImage != null && ImageIndex == -1)
                 AppendTabImageToParent();
+
+            if (onMainFormReadyFired)
+                return;
+            onMainFormReadyFired = true;
 
             MainForm.LayoutReady += mainForm_Ready;
         }

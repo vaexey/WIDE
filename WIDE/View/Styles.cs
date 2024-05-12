@@ -8,17 +8,34 @@ namespace WIDE.View
 {
     public static class Styles
     {
+        #region FONTS
         public static Font FontMonospace(float emSize) => new("Courier New", emSize);
         public static Font FontSans(float emSize) => new("Roboto", emSize);
+        #endregion
 
+        #region BASE_COLORS
         public static Color ColorBackground { get; } = ColorOf(50, 50, 50); // ColorOf(200,200,200);
         public static Color ColorFont { get; } = Grayscale(Invert(ColorBackground));
+        #endregion
+
+        #region GENERAL_UI_COLORS
         public static Color ColorSelection { get; } = ColorOf(200, 50, 50);
 
         public static Color ColorInner { get; } = Mix(ColorBackground, 0.6, 0.6, 0.6);
 
         public static Color ColorCollapseBar { get; } = Mix(ColorBackground, 1, 1, 1.5);
+        #endregion
 
+        #region CODE_COLORS
+        public static Color ColorCodeBackground { get; } = ColorInner;
+        public static Color ColorCodeFont { get; } = Mix(ColorFont, 0.9, 1.1, 1.1);
+        public static Color ColorCodeInstruction { get; } =
+            Mix(ColorCodeFont, 0.5, 1, 1);
+        public static Color ColorCodeComment { get; } =
+            Mix(ColorCodeFont, 0.5, 0.5, 0.5);
+        #endregion
+
+        #region Private Color conversion functions
         private static Color ColorOf(double r, double g, double b)
         {
             return Color.FromArgb(
@@ -57,5 +74,6 @@ namespace WIDE.View
                 bMod * (255 - basic.B)
             );
         }
+        #endregion
     }
 }

@@ -1,4 +1,5 @@
-﻿using WIDECLI.simpleW;
+﻿using WIDECLI.Instructor;
+using WIDECLI.simpleW;
 
 namespace WIDECLI
 {
@@ -6,9 +7,16 @@ namespace WIDECLI
     {
         static void Main(string[] args)
         {
-            var sw = new SimpleW();
+            //var sw = new SimpleW();
 
-            sw.Start();
+            //sw.Start();
+            //var si = new SimpleInstructor();
+
+            //si.Start();
+
+            var sa = new SimpleAssembler();
+
+            sa.Start();
         }
     }
 }

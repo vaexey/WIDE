@@ -195,6 +195,8 @@ namespace WIDE.View.Layout
 
                 InactiveColor = Styles.ColorInner,
                 TabDrawer = ContentTabDrawer,
+
+                CloseButton = false
             };
             Content.MouseMove += Content_MouseMove;
             Content.MouseUp += Content_MouseUp;

@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WIDEToolkit.Emulator.Blocks.Register;
-using WIDEToolkit.Emulator.Data;
+using WIDEToolkit.Data;
+using WIDEToolkit.Data.Exceptions;
 using WIDEToolkit.Emulator.Flow;
 
 namespace WIDEToolkit.Emulator.Blocks.ALU

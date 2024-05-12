@@ -266,6 +266,13 @@ namespace WIDEToolkit.Examples.W
                     Size = 256,
                     WordSize = 8
                 });
+            //MemoryBlock.MemoryDivisions.Add(
+            //    new()
+            //    {
+            //        DivisionName = "PaO",
+            //        Size = 65536,
+            //        WordSize = 8
+            //    });
         }
     }
 }

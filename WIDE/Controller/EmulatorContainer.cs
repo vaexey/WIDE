@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WIDEToolkit.Data.Binary;
 using WIDEToolkit.Emulator;
 using WIDEToolkit.Emulator.Blocks.MemHandler;
-using WIDEToolkit.Emulator.Data;
 using WIDEToolkit.Examples.W;
 
 namespace WIDE.Controller

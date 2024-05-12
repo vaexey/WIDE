@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WIDEToolkit.Data.Binary;
 using WIDEToolkit.Emulator;
-using WIDEToolkit.Emulator.Assembly;
-using WIDEToolkit.Emulator.Data;
 using WIDEToolkit.Emulator.Flow;
+using WIDEToolkit.Emulator.Assembly;
 
 namespace WIDEToolkit.Examples.W
 {

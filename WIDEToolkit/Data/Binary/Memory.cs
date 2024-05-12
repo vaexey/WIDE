@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WIDEToolkit.Data.Exceptions;
 using WIDEToolkit.Emulator.Flow;
 
-namespace WIDEToolkit.Emulator.Data
+namespace WIDEToolkit.Data.Binary
 {
     public abstract class Memory
     {
@@ -22,7 +23,7 @@ namespace WIDEToolkit.Emulator.Data
 
         public virtual bool CheckChangedFlag()
         {
-            if(HasChanged)
+            if (HasChanged)
             {
                 HasChanged = false;
 
@@ -39,7 +40,7 @@ namespace WIDEToolkit.Emulator.Data
 
         protected virtual void CheckBounds(int address)
         {
-            if ( address < 0 || address >= GetSize())
+            if (address < 0 || address >= GetSize())
                 throw new MemoryException($"Address {address} out of memory bounds {GetSize()}");
         }
 
@@ -55,7 +56,7 @@ namespace WIDEToolkit.Emulator.Data
 
         public virtual void Write(int address, IEnumerable<WORD> value)
         {
-            foreach(var w in value)
+            foreach (var w in value)
             {
                 Write(address, w);
 

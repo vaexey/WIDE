@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WIDEToolkit.Emulator.Data;
+using WIDEToolkit.Data.Binary;
 
 namespace WIDEToolkit.Emulator.Assembly
 {
@@ -13,7 +13,7 @@ namespace WIDEToolkit.Emulator.Assembly
 
         public RawInstruction? ParseInstruction(WORD ir)
         {
-            foreach(var i in Instructions)
+            foreach (var i in Instructions)
             {
                 var opc = i.OpCode;
 

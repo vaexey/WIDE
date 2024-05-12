@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WIDEToolkit.Emulator.Data;
+using WIDEToolkit.Data.Binary;
 using WIDEToolkit.Examples.W;
 using a = WIDEToolkit.Emulator;
 

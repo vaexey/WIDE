@@ -7,7 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Assembler\" />
+    <Folder Include="Assembler\Instructor\" />
+    <Folder Include="Instructor\" />
   </ItemGroup>
 
 </Project>

@@ -1017,35 +1017,39 @@ namespace YaTabControl
             if (Controls.Count == 0)
                 return;
 
+
             Point p;
 
             //see if user clicked on close button
             p = mea.Location;
-            for (int i = 0; i <= yaLastVisibleTabIndex; i++)
-            {
-                var tag = this.Controls[i].Tag;
-                if (tag != null && tag.ToString() == "NEW_TAB")
-                {
-                    continue;
-                }
 
-                var tabRectangle = GetTabRect(i);
-                var clickRectangle = GetRectangleClose(tabRectangle, 2);    //slightly larger target area for the mouse (x image padding)
-
-                if (clickRectangle.Contains(p))
+            // bugfix: ytc having close button no matter what
+            if (yaCloseButton)
+                for (int i = 0; i <= yaLastVisibleTabIndex; i++)
                 {
-                    var etc = new TabClosingEventArgs();
-                    OnTabClosing(etc);
-                    if (!etc.Cancel)
+                    var tag = this.Controls[i].Tag;
+                    if (tag != null && tag.ToString() == "NEW_TAB")
                     {
-                        Controls.RemoveAt(i);
-                        InU();
-                        this.SelectedIndex = i - 1;
-                        OnTabChanged(new EventArgs());
-                        return;
+                        continue;
+                    }
+
+                    var tabRectangle = GetTabRect(i);
+                    var clickRectangle = GetRectangleClose(tabRectangle, 2);    //slightly larger target area for the mouse (x image padding)
+
+                    if (clickRectangle.Contains(p))
+                    {
+                        var etc = new TabClosingEventArgs();
+                        OnTabClosing(etc);
+                        if (!etc.Cancel)
+                        {
+                            Controls.RemoveAt(i);
+                            InU();
+                            this.SelectedIndex = i - 1;
+                            OnTabChanged(new EventArgs());
+                            return;
+                        }
                     }
                 }
-            }
 
             //done checking for close event
             p = new Point(mea.X - 2 * yaMargin, mea.Y);
