@@ -50,7 +50,30 @@ namespace WIDEToolkit.Examples.W
                     arch, WORD.FromUInt64(5ul), "SOB", new() {
                         "czyt wys wei il",
                         "wyad wea wel"
-                    })
+                    }),
+                new RawInstruction(
+                    WORD.FromUInt64(6ul),
+                    "SOM",
+                    new Signal[][][]
+                    {
+                        new Signal[][]
+                        {
+                            "czyt wys wei il".Split(" ").Select(s => arch.GetSignal(s)).ToArray(),
+                            "czyt wys wei il".Split(" ").Select(s => arch.GetSignal(s)).ToArray(),
+                        },
+                        new Signal[][]
+                        {
+                            "wyl wea".Split(" ").Select(s => arch.GetSignal(s)).ToArray(),
+                            "wyad wea wel".Split(" ").Select(s => arch.GetSignal(s)).ToArray(),
+                        }
+                    },
+                    new ForkEvaluator(
+                            new ForkComponent[]
+                            {
+                                new ForkComponent("Z", 1)
+                            }
+                        )
+                )
             };
         }
 

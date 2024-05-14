@@ -17,7 +17,7 @@ namespace WIDECLI.simpleW
         private Emulator Emu;
         private WRawInstructionSet ris;
         private WArchitecture W = new();
-        private MemHandler MH;
+        private Memory MH;
 
 
         public void Start()
@@ -27,16 +27,25 @@ namespace WIDECLI.simpleW
 
             Emu = new(W, ris);
 
-            MH = (MemHandler)W.Blocks.Where(b => b.GetType() == typeof(MemHandler)).First();
+            //MH = (MemHandler)W.Blocks.Where(b => b.GetType() == typeof(MemHandler)).First();
 
-            MH.Live.Memory = new SingleMemory(256);
+            //MH.Live.Memory = new SingleMemory(256);
 
-            MH.Live.Memory.Write(0, ris.Build("POB", 10));
-            MH.Live.Memory.Write(1, ris.Build("DOD", 11));
-            MH.Live.Memory.Write(2, ris.Build("LAD", 10));
-            MH.Live.Memory.Write(3, ris.Build("SOB", 0));
+            MH = W.MemoryBlock.Live.Get("PaO");
 
-            MH.Live.Memory.Write(11, WORD.FromUInt64(1));
+            var bytes = File.ReadAllBytes("./text.bin");
+
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                MH.Write(i, WORD.FromUInt64(bytes[i], 8));
+            }
+
+            //MH.Live.Memory.Write(0, ris.Build("POB", 10));
+            //MH.Live.Memory.Write(1, ris.Build("DOD", 11));
+            //MH.Live.Memory.Write(2, ris.Build("LAD", 10));
+            //MH.Live.Memory.Write(3, ris.Build("SOB", 0));
+
+            //MH.Live.Memory.Write(11, WORD.FromUInt64(1));
 
             //MH.Live.Memory.Write(0, WORD.FromUInt64(34, 8));
             //MH.Live.Memory.Write(1, WORD.FromUInt64(160, 8));
@@ -73,7 +82,7 @@ namespace WIDECLI.simpleW
                     var addr = int.Parse(sp[0]);
                     var data = int.Parse(sp[1]);
 
-                    MH.Live.Memory.Write(addr, WORD.FromUInt64((ulong)data, 8));
+                    MH.Write(addr, WORD.FromUInt64((ulong)data, 8));
                 }
                 else if(line.StartsWith("#"))
                 {

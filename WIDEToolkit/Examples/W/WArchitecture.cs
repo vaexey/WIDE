@@ -124,7 +124,15 @@ namespace WIDEToolkit.Examples.W
                         Start = 0,
                         End = 8,
                         EndpointType = EndpointType.REGISTER,
-                    }.WithSignal("wyak", "magS", RegisterSignalMode.STORE)
+                    }.WithSignal("wyak", "magS", RegisterSignalMode.STORE),
+                    new RegisterDivisionBlueprint()
+                    {
+                        NameRegex = new("^(.*)$"),
+                        NameFormat = "Z",
+                        Start = 7,
+                        End = 8,
+                        EndpointType = EndpointType.REGISTER,
+                    }
                 },
                 Meta = new("Rejestr AK", 200, 100, 100, 100)
             });

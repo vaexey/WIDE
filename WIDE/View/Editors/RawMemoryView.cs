@@ -64,10 +64,18 @@ namespace WIDE.View.Editors
         protected override void OnMainFormReady(EventArgs e)
         {
             base.OnMainFormReady(e);
+        }
+
+        private void EContainer_LiveCreated(object? sender, EventArgs e)
+        {
+            memoryCombo.Items.Clear();
+            memoryCombo.Items.Add("(not selected)");
 
             memoryCombo.Items.AddRange(
                 MainForm.EContainer.Arch.MemoryBlock.Live.Divisions
                 .Select(m => m.DivisionName).ToArray());
+
+            memoryCombo.SelectedIndex = memoryCombo.Items.Count > 1 ? 1 : 0;
         }
 
         private void timer_Tick(object? sender, EventArgs e)

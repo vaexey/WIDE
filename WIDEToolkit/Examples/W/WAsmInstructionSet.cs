@@ -23,6 +23,7 @@ namespace WIDEToolkit.Examples.W
                 Make1Arg("POB", 3ul),
                 Make1Arg("LAD", 4ul),
                 Make1Arg("SOB", 5ul),
+                Make1Arg("SOM", 6ul),
 
                 Make1Arg("RST", 0ul),
                 Make0Arg("RPA", 0ul),

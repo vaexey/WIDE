@@ -12,7 +12,7 @@ namespace WIDEToolkit.Emulator
     public class Emulator
     {
         public Architecture Arch { get; }
-        public RawInstructionSet Set { get; }
+        public RawInstructionSet Set { get; set; }
 
         public RawInstruction? CurrentInstruction { get; set; } = null;
         public int CycleIndex { get; set; } = 0;

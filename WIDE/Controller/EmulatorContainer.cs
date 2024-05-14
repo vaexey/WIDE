@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WIDEToolkit.Data.Binary;
 using WIDEToolkit.Emulator;
+using WIDEToolkit.Emulator.Assembly;
 using WIDEToolkit.Emulator.Blocks.MemHandler;
 using WIDEToolkit.Examples.W;
 
@@ -15,6 +16,7 @@ namespace WIDE.Controller
         public Thread Thread { get; }
 
         public Architecture Arch => Emu.Arch;
+        public bool IsLive => Arch.IsLive;
 
         public Emulator Emu { get; set; }
 
@@ -26,15 +28,17 @@ namespace WIDE.Controller
         private bool _disposed = false;
         private bool _thread = false;
 
+        public event EventHandler<EventArgs> LiveCreated = delegate { };
+
         public EmulatorContainer(Architecture? arch = null)
         {
-            //Arch = arch ?? new Architecture();
-            //Emu = new Emulator(Arch, new());
+            Emu = new Emulator(arch ?? new WArchitecture(), new());
 
-            arch = new WArchitecture();
-            arch.CreateLive();
-            var riset = new WRawInstructionSet(arch);
-            Emu = new Emulator(arch, riset);
+            //arch = new WArchitecture();
+            //arch.CreateLive();
+            //var riset = new WRawInstructionSet(arch);
+            ////var riset = new RawInstructionSet();
+            //Emu = new Emulator(arch, riset);
 
             //var mem = new SingleMemory(256);
             //mem.DivisionName = "PaO";
@@ -46,17 +50,20 @@ namespace WIDE.Controller
 
             //MH.Live.Memory = Memory;
 
-            var mem = arch.MemoryBlock.Live.Get("PaO");
+            //var mem = arch.MemoryBlock.Live.Get("PaO");
             //mem.Write(0, WORD.FromUInt64(35, 8));
             //mem.Write(1, WORD.FromUInt64(132,8));
             //mem.Write(2, WORD.FromUInt64(160, 8));
             //mem.Write(3, WORD.FromUInt64(1, 8));
-            mem.Write(0, riset.Build("POB", 10));
-            mem.Write(1, riset.Build("DOD", 11));
-            mem.Write(2, riset.Build("LAD", 10));
-            mem.Write(3, riset.Build("SOB", 0));
+            //mem.Write(0, riset.Build("POB", 10));
+            //mem.Write(1, riset.Build("DOD", 11));
+            //mem.Write(2, riset.Build("LAD", 10));
+            //mem.Write(3, riset.Build("SOB", 0));
 
-            mem.Write(11, WORD.FromUInt64(1));
+            //mem.Write(11, WORD.FromUInt64(1));
+
+            CreateLive();
+
 
             Thread = new(EmulatorThreadSub);
         }
@@ -177,6 +184,20 @@ namespace WIDE.Controller
 
             while (_thread)
             { };
+        }
+
+        public void CreateLive()
+        {
+
+            Arch.CreateLive();
+            Emu.Set = new WRawInstructionSet(Arch);
+            try
+            {
+            }
+            catch
+            {
+                //todo
+            }
         }
     }
 }
